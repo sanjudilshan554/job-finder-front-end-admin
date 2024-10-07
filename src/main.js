@@ -11,7 +11,7 @@ import './vendor/css/colors/default.css'
 import './vendor/css/style.css'
 
 import './vendor/bootstrap/js/bootstrap.bundle.min.js';
-// import './vendor/js/perfect-scrollbar.jquery.min.js';
+import './vendor/js/perfect-scrollbar.jquery.min.js';
 import './vendor/js/waves.js';
 // import './vendor/morrisjs/morris.min.js';
 // import './vendor/js/custom.min.js';

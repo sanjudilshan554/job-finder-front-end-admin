@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+// import { RouterLink, RouterView } from 'vue-router'
 import Navbar from '../components/main/Navbar.vue'
 import Sidebar from '../components/main/Sidebar.vue'
 import Footer from '../components/main/Footer.vue'
@@ -31,9 +31,7 @@ onMounted(() => {
     <Sidebar />
     <div class="page-wrapper">
       <RouterView />
-      <Footer />
-      <slot name="content"/>
-      <slot name="modal" />
+      <Footer /> 
     </div>
     
   </div>
