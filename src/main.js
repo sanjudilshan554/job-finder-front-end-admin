@@ -1,4 +1,4 @@
-// import './assets/main.css'
+import './assets/style.scss'
 import './vendor/bootstrap/css/bootstrap.css'
 import './vendor/bootstrap/css/bootstrap.min.css'
 import './vendor/css/colors/default.css'
@@ -9,10 +9,12 @@ import './vendor/css/pages/dashboard1.css'
 import './vendor/bootstrap/css/bootstrap.min.css'
 import './vendor/css/colors/default.css'
 import './vendor/css/style.css'
+import './vendor/bootstrap/css/bootstrap-icons.css'
 
 import './vendor/bootstrap/js/bootstrap.bundle.min.js';
 import './vendor/js/perfect-scrollbar.jquery.min.js';
 import './vendor/js/waves.js';
+// import './assets/vendor/css/bootstrap-icons.css';
 // import './vendor/morrisjs/morris.min.js';
 // import './vendor/js/custom.min.js';
 // import './vendor/d3/d3.min.js';  

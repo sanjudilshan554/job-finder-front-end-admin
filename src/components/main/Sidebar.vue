@@ -10,8 +10,7 @@
                     <li :class="{ active: $route.path === '/profile' }" > <a class="waves-effect waves-dark" href="/profile" aria-expanded="false"><i
                                 class="fa fa-user-circle-o"></i><span class="hide-menu">Profile</span></a>
                     </li>
-                    <li :class="{ active: $route.path === '/category' }" > <a class="waves-effect waves-dark" href="/category" aria-expanded="false"><i
-                                class="fa fa-user-circle-o"></i><span class="hide-menu">Category</span></a>
+                    <li :class="{ active: $route.path === '/category' }" > <a class="waves-effect waves-dark" href="/category" aria-expanded="false"><i class="bi bi-tag"></i><span class="hide-menu">Category</span></a>
                     </li>
                 </ul>
             </nav>
