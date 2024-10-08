@@ -35,7 +35,11 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="category in categories" class="cursor-pointer">
-                                        <td> {{ category.status }}</td>
+                                        <td>
+                                            <span v-if="category.status == 1" class="badge badge-success">Enabled</span>
+                                            <span v-if="category.status == 0"
+                                                class="badge badge-secondary">Disabled</span>
+                                        </td>
                                         <td>{{ category.name }}</td>
                                         <td>{{ category.slug }}</td>
                                         <td>{{ category.description }}</td>
