@@ -84,7 +84,7 @@
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Status:</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch"
+                                <input class="form-check-input" type="checkbox" role="switch" v-model="category.status"
                                     id="flexSwitchCheckDefault">
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox
                                     input</label>
@@ -93,7 +93,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            @click="closeCreateModal">Close</button>
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </form>
@@ -130,7 +131,7 @@
                             <label for="message-text" class="col-form-label">Status:</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch"
-                                    id="flexSwitchCheckDefault">
+                                    v-model="categoryData.status" id="flexSwitchCheckDefault">
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox
                                     input</label>
                             </div>
@@ -152,8 +153,9 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        @click.prevent="closeDeleteModal">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -161,8 +163,9 @@
                     Are you sure you want to delete this category?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary"
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        @click.prevent="closeDeleteModal">Close</button>
+                    <button type="button" class="btn btn-danger"
                         @click.prevent="deleteCategory(categoryData.id)">delete</button>
                 </div>
             </div>
@@ -173,6 +176,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios'
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 const category = ref({});
 const categories = ref([]);
@@ -182,8 +187,11 @@ const createCategory = async () => {
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/category/store', category.value);
         closeCreateModal();
+        clearVariables();
+        successMessage('Category created successfully');
+        getCategories();
     } catch (error) {
-        console.log('error', error);
+        errorMessage(error);
     }
 }
 
@@ -198,9 +206,9 @@ const closeEditModal = () => {
 const getCategories = async () => {
     try {
         const response = await axios.get('http://127.0.0.1:8000/api/category/all');
-        categories.value = response.data; 
+        categories.value = response.data;
     } catch (error) {
-        console.log('error', error);
+        errorMessage(error);
     }
 }
 
@@ -208,20 +216,25 @@ const editCategory = async (id) => {
     try {
         const response = await axios.get(`http://127.0.0.1:8000/api/category/get/${id}`);
         categoryData.value = response.data;
-        $('#editCategory').modal('show'); 
+        if (categoryData.value.status == 0) {
+            categoryData.value.status = false;
+        } else {
+            categoryData.value.status = true;
+        }
+        $('#editCategory').modal('show');
     } catch (error) {
-        console.log('error', error);
+        errorMessage(error);
     }
 }
 
 const updateCategory = async (id) => {
     try {
-        console.log('category data', categoryData.value);
         const response = await axios.post(`http://127.0.0.1:8000/api/category/update/${id}`, categoryData.value);
-        $('#editCategory').modal('hide'); 
+        $('#editCategory').modal('hide');
+        successMessage('Category updated successfully');
         getCategories();
     } catch (error) {
-        console.log('error', error);
+        errorMessage(error);
     }
 }
 
@@ -231,7 +244,7 @@ const confirmDelete = async (id) => {
         const response = await axios.get(`http://127.0.0.1:8000/api/category/get/${id}`);
         categoryData.value = response.data;
     } catch (error) {
-        console.log('error', error);
+        errorMessage(error);
     }
 }
 
@@ -239,12 +252,58 @@ const deleteCategory = async (id) => {
     try {
         const response = await axios.delete(`http://127.0.0.1:8000/api/category/delete/${id}`);
         $('#deleteCategory').modal('hide');
+        successMessage('Category deleted successfully');
         getCategories();
     } catch (error) {
-        console.log('error', error);
+        errorMessage(error);
     }
 }
 
+const successMessage = (title) => {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+
+    Toast.fire({
+        icon: "success",
+        title: title
+    });
+};
+
+const errorMessage = (title) => {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+
+    Toast.fire({
+        icon: "error",
+        title: title
+    });
+};
+
+const clearVariables = () => {
+    category.value = {};
+}
+
+const closeDeleteModal = () => {
+    $('#deleteCategory').modal('hide');
+}
 onMounted(() => {
     getCategories();
 });

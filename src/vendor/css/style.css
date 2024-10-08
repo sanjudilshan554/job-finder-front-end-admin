@@ -2957,7 +2957,7 @@ Form summernote
 Form addons page
 ============================================================== */
 /*Bootstrap select*/
-.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+/* .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
   width: 100%;
 }
 
@@ -3006,7 +3006,7 @@ Form addons page
 
 .input-form .btn {
   padding: 8px 12px;
-}
+} */
 
 /*============================================================== 
 Form Material page
@@ -3165,18 +3165,18 @@ This is for the checkbox radio button and switch
 }
 
 /* Radio With gap */
-[type=radio].with-gap:checked + label:after {
+/* [type=radio].with-gap:checked + label:after {
   transform: scale(0.5);
-}
+} */
 
 /* Focused styles */
-[type=radio].tabbed:focus + label:before {
+/* [type=radio].tabbed:focus + label:before {
   box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.1);
   animation: ripple 0.2s linear forwards;
-}
+} */
 
 /* Disabled Radio With gap */
-[type=radio].with-gap:disabled:checked + label:before {
+/* [type=radio].with-gap:disabled:checked + label:before {
   border: 2px solid rgba(0, 0, 0, 0.26);
   animation: ripple 0.2s linear forwards;
 }
@@ -3184,10 +3184,10 @@ This is for the checkbox radio button and switch
 [type=radio].with-gap:disabled:checked + label:after {
   border: none;
   background-color: rgba(0, 0, 0, 0.26);
-}
+} */
 
 /* Disabled style */
-[type=radio]:disabled:not(:checked) + label:before,
+/* [type=radio]:disabled:not(:checked) + label:before,
 [type=radio]:disabled:checked + label:before {
   background-color: transparent;
   border-color: rgba(0, 0, 0, 0.26);
@@ -3205,7 +3205,7 @@ This is for the checkbox radio button and switch
 [type=radio]:disabled:checked + label:after {
   background-color: rgba(0, 0, 0, 0.26);
   border-color: #BDBDBD;
-}
+} */
 
 /* Checkboxes
    ========================================================================== */
@@ -3220,18 +3220,17 @@ form p:last-child {
 }
 
 /* Remove default checkbox */
-[type=checkbox]:not(:checked),
+/* [type=checkbox]:not(:checked),
 [type=checkbox]:checked {
   position: absolute;
   left: -9999px;
   opacity: 0;
 }
 
-[type=checkbox] {
-  /* checkbox aspect */
-}
+[type=checkbox] { 
+} */
 
-[type=checkbox] + label {
+/* [type=checkbox] + label {
   position: relative;
   padding-left: 35px;
   cursor: pointer;
@@ -3239,17 +3238,13 @@ form p:last-child {
   height: 25px;
   line-height: 25px;
   font-size: 1rem;
-  -webkit-user-select: none;
-  /* webkit (safari, chrome) browsers */
-  -moz-user-select: none;
-  /* mozilla browsers */
-  -khtml-user-select: none;
-  /* webkit (konqueror) browsers */
-  -ms-user-select: none;
-  /* IE10+ */
-}
+  -webkit-user-select: none; 
+  -moz-user-select: none; 
+  -khtml-user-select: none; 
+  -ms-user-select: none; 
+} */
 
-[type=checkbox] + label:before,
+/* [type=checkbox] + label:before,
 [type=checkbox]:not(.filled-in) + label:after {
   content: "";
   position: absolute;
@@ -3300,10 +3295,10 @@ form p:last-child {
 [type=checkbox]:checked:disabled + label:before {
   border-right: 2px solid rgba(0, 0, 0, 0.26);
   border-bottom: 2px solid rgba(0, 0, 0, 0.26);
-}
+} */
 
 /* Indeterminate checkbox */
-[type=checkbox]:indeterminate + label:before {
+/* [type=checkbox]:indeterminate + label:before {
   top: -11px;
   left: -12px;
   width: 10px;
@@ -3331,13 +3326,12 @@ form p:last-child {
 [type=checkbox].filled-in + label:after {
   content: "";
   left: 0;
-  position: absolute;
-  /* .1s delay is for check animation */
+  position: absolute; 
   transition: border 0.25s, background-color 0.25s, width 0.2s 0.1s, height 0.2s 0.1s, top 0.2s 0.1s, left 0.2s 0.1s;
   z-index: 1;
-}
+} */
 
-[type=checkbox].filled-in:not(:checked) + label:before {
+/* [type=checkbox].filled-in:not(:checked) + label:before {
   width: 0;
   height: 0;
   border: 3px solid transparent;
@@ -3407,11 +3401,11 @@ form p:last-child {
 [type=checkbox].filled-in:disabled:checked + label:after {
   background-color: #BDBDBD;
   border-color: #BDBDBD;
-}
+} */
 
 /* Switch
    ========================================================================== */
-.switch,
+/* .switch,
 .switch * {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3483,7 +3477,7 @@ input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::after {
 .switch label input[type=checkbox][disabled] + .lever:after,
 .switch label input[type=checkbox][disabled]:checked + .lever:after {
   background-color: #BDBDBD;
-}
+} */
 
 .scale-up {
   transition: all 0.3s ease;
@@ -3545,7 +3539,7 @@ input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::after {
 }
 /*Floating label*/
 /*Bootstrap Select*/
-.bootstrap-select.btn-group .dropdown-menu {
+/* .bootstrap-select.btn-group .dropdown-menu {
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
 }
 
@@ -4298,7 +4292,7 @@ input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::after {
 }
 .switch label input[type=checkbox]:checked + .lever.switch-col-white:after {
   background-color: #ffffff;
-}
+} */
 
 /*Form Validation*/
 .help-block ul {
