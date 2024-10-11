@@ -179,7 +179,6 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import Multiselect from 'vue-multiselect';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-// import EditJob from '../views/Jobs/edit.vue'
 
 const job = ref({});
 const jobs = ref([]);
@@ -203,8 +202,7 @@ const createJob = async () => {
         clearVariables();
         successMessage('Job created successfully');
         getJobs();
-        await axios.post(`http://127.0.0.1:8000/api/job/edit/${response.data.id}`);
-        // router.push({ name: 'edit-job', params: { job_id: response.data.id } });
+        router.push({ name: 'edit-job', params: { job_id: response.data.id } });
     } catch (error) {
         errorMessage(error);
     }
