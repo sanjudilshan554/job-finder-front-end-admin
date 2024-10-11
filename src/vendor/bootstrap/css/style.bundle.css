@@ -49275,10 +49275,7 @@ code:not([class*=language-]) {
     transition: visibility 0s, opacity 0.2s linear;
 }
 
-.multiselect-wrapper:hover .supplier-remove-btn {
-    visibility: visible;
-    opacity: 1;
-}
+ 
 
 .expense-image-toggle {
     z-index: 9;
