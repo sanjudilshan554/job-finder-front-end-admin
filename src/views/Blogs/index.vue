@@ -78,7 +78,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Title:</label>
-                            <input type="text" class="form-control" id="recipient-name" v-model="blog.name">
+                            <input type="text" class="form-control" id="recipient-name" v-model="blog.title">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Blog Category:</label>
@@ -184,26 +184,17 @@ const blogs = ref([]);
 const blogData = ref({});
 const blogCategories = ref([]);
 
-const jobTypes = [
-    {id:1, name:'Full Time'},
-    {id:2, name:'Part Time'},
-    {id:3, name:'Remote'},
-    {id:4, name:'Freelance'}, 
-];
-
 const createBlog = async () => {
     try {
         blog.value.category_id = blog.value.category.id;
         blog.value.category_name = blog.value.category.name;
-        blog.value.type_id = blog.value.type.id;
-        blog.value.type_name = blog.value.type.name;
         
         const response = await axios.post('http://127.0.0.1:8000/api/blog/store', blog.value);
         closeCreateModal();
         clearVariables();
         successMessage('Blog created successfully');
         getJobs();
-        router.push({ name: 'edit-blog', params: { job_id: response.data.id } });
+        router.push({ name: 'edit-blog', params: { blog_id: response.data.id } });
     } catch (error) {
         errorMessage(error);
     }
