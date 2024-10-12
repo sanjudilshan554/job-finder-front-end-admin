@@ -4,6 +4,8 @@ import Profile from '../views/Profile/index.vue'
 import Category from '../views/Category/index.vue'
 import Jobs from '../views/Jobs/index.vue'
 import EditJob from '../views/Jobs/edit.vue'
+import Blogs from '../views/Blogs/index.vue'
+import BlogCategories from '../views/BlogCategory/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +34,16 @@ const router = createRouter({
       path: '/jobs/edit-job/:job_id',
       name: 'edit-job',
       component: EditJob
+    }, 
+    {
+      path: '/blogs',
+      name: 'blogs',
+      component: Blogs
+    }, 
+    {
+      path: '/blogs/category',
+      name: 'blog-categories',
+      component: BlogCategories
     }, 
   ]
 })
