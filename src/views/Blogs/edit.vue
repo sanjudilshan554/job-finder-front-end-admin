@@ -4,7 +4,7 @@
         <!-- Header -->
         <div class="d-flex justify-content-between">
             <div class="text-start">
-                <h2 class="fw-bold">Job # {{ job_id }}</h2>
+                <h2 class="fw-bold">Blog # {{ blog_id }}</h2>
             </div>
         </div>
 
@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <form @submit.prevent="updateJob" enctype="multipart/form-data">
+                    <form @submit.prevent="updateBlog" enctype="multipart/form-data">
                         <div class="card-body">
                             <!-- <h4 class="card-title">Jobs</h4>
                         <h6 class="card-subtitle">Add class <code>.table</code></h6> -->
@@ -23,70 +23,43 @@
                                         <label for="message-text" class="col-form-label">Status:</label>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" role="switch"
-                                                v-model="jobData.status" id="flexSwitchCheckDefault">
+                                                v-model="blogData.status" id="flexSwitchCheckDefault">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-4">
-                                    <label for="name">Job Name:</label>
-                                    <input v-model="jobData.name" class="form-control form-control" type="text"
-                                        placeholder="Job Name">
+                                <div class="col-12">
+                                    <label for="name">Blog Title:</label>
+                                    <input v-model="blogData.title" class="form-control form-control" type="text"
+                                        placeholder="Blog Title">
                                 </div>
-                                <div class="col-4">
+
+                                <div class="col-4 mt-3">
                                     <label for="name">Category:</label>
                                     <div>
-                                        <multiselect v-model="jobData.category" :options="jobCategories"
+                                        <multiselect v-model="blogData.category" :options="blogCategories"
                                             :searchable="false" track-by="id" label="name" :close-on-select="false"
                                             :show-labels="false" placeholder="Select Category">
                                         </multiselect>
                                         <pre class="language-json"><code>{{ value }}</code></pre>
                                     </div>
-                                </div>
-                                <div class="col-4">
-                                    <label for="name">Type:</label>
-                                    <multiselect v-model="jobData.type" :options="jobTypes" :searchable="false"
-                                        track-by="id" label="name" :close-on-select="false" :show-labels="false"
-                                        placeholder="Select Job Type">
-                                    </multiselect>
-                                    <pre class="language-json"><code>{{ value }}</code></pre>
-                                </div>
-                                
-                                <div class="col-6 mt-3">
-                                    <label for="name">Location:</label>
-                                    <input v-model="jobData.location" class="form-control form-control" type="text"
-                                        placeholder="Location">
-                                </div>
-                                <div class="col-6 mt-3">
-                                    <label for="name">Salary:</label>
-                                    <input v-model="jobData.salary" class="form-control form-control" type="text"
-                                        placeholder="Salary">
-                                </div>
-                                <div class="col-6 mt-3">
-                                    <label for="name">Working hours:</label>
-                                    <input v-model="job.working_hours" class="form-control form-control" type="text"
-                                        placeholder="Working Hours">
-                                </div>
-                                <div class="col-6 mt-3">
-                                    <label for="name">Company name:</label>
-                                    <input v-model="jobData.company_name" class="form-control form-control" type="text"
-                                        placeholder="Company Name">
+                                </div>  
+
+                                <div class="col-12 mt-3">
+                                    <label for="name">View Text:</label>
+                                    <textarea v-model="blogData.view_text" class="form-control form-control" type="text"
+                                        placeholder="View Text"/>
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <label for="name">Experiences:</label>
-                                    <textarea v-model="jobData.experience" class="form-control form-control" type="text"
-                                        placeholder="Experience"/>
-                                </div>
+                                    <label for="name">Text:</label>
+                                    <textarea v-model="blogData.text" class="form-control form-control"
+                                        type="text" placeholder="Text" />
+                                </div> 
                                 <div class="col-12 mt-3">
-                                    <label for="name">Responsibilities:</label>
-                                    <textarea v-model="jobData.responsibilities" class="form-control form-control"
-                                        type="text" placeholder="Responsibilities" />
-                                </div>
-                                <div class="col-12 mt-3">
-                                    <label for="name">Description:</label>
-                                    <textarea v-model="jobData.description" class="form-control form-control"
-                                        type="text" placeholder="Description" />
-                                </div>
+                                    <label for="name">Meta tags:</label>
+                                    <textarea v-model="blogData.meta_tags" class="form-control form-control"
+                                        type="text" placeholder="Meta Tags" />
+                                </div> 
                                 <div class="mt-3">
                                     <label for="name">Image:</label>
                                     <input class="form-control form-control" type="file" placeholder=".form-control">
@@ -119,49 +92,39 @@ import { useRoute } from 'vue-router';
 import Multiselect from 'vue-multiselect';
 const route = useRoute();
 
-const job = ref({});
-const jobs = ref([]);
-const jobData = ref({});
-const job_id = ref(route.params.job_id);
-const jobCategories = ref([]);
+const blog = ref({});
+const blogs = ref([]);
+const blogData = ref({});
+const blog_id = ref(route.params.blog_id);
+const blogCategories = ref([]); 
 
-const jobTypes = [
-    { id: 1, name: 'Full Time' },
-    { id: 2, name: 'Part Time' },
-    { id: 3, name: 'Remote' },
-    { id: 4, name: 'Freelance' },
-];
-
-const getJob = async () => {
+const getBlog = async () => {
     try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/job/get/${job_id.value}`);
-        jobData.value = response.data;
-        if (jobData.value.status == 0) {
-            jobData.value.status = false;
+        const response = await axios.get(`http://127.0.0.1:8000/api/blog/get/${blog_id.value}`);
+        blogData.value = response.data;
+        if (blogData.value.status == 0) {
+            blogData.value.status = false;
         } else {
-            jobData.value.status = true;
+            blogData.value.status = true;
         }
 
-        jobData.value.category = { id: jobData.value.category_id, name: jobData.value.category_name };
-        jobData.value.type = { id: jobData.value.type_id, name: jobData.value.type_name };
+        blogData.value.category = { id: blogData.value.category_id, name: blogData.value.category_name };
 
-        console.log('job', response);
+        console.log('blog', response);
         $('#editJob').modal('show');
     } catch (error) {
         errorMessage(error);
     }
 }
 
-const updateJob = async () => {
+const updateBlog = async () => {
     try {
-        jobData.value.category_id = jobData.value.category.id;
-        jobData.value.category_name = jobData.value.category.name;
-        jobData.value.type_id = jobData.value.type.id;
-        jobData.value.type_name = jobData.value.type.name;
-        console.log('jobData.value', jobData.value);
-        const response = await axios.post(`http://127.0.0.1:8000/api/job/update/${job_id.value}`, jobData.value);
-        successMessage('Job updated successfully');
-        getJob();
+        blogData.value.category_id = blogData.value.category.id;
+        blogData.value.category_name = blogData.value.category.name;
+        console.log('blogData.value', blogData.value);
+        const response = await axios.post(`http://127.0.0.1:8000/api/blog/update/${blog_id.value}`, blogData.value);
+        successMessage('Blog updated successfully');
+        getBlog();
         console.log('update', response);
     } catch (error) {
         errorMessage(error);
@@ -171,8 +134,8 @@ const updateJob = async () => {
 const confirmDelete = async (id) => {
     try {
         $('#deleteJob').modal('show');
-        const response = await axios.get(`http://127.0.0.1:8000/api/job/get/${id}`);
-        jobData.value = response.data;
+        const response = await axios.get(`http://127.0.0.1:8000/api/blog/get/${id}`);
+        blogData.value = response.data;
     } catch (error) {
         errorMessage(error);
     }
@@ -180,10 +143,10 @@ const confirmDelete = async (id) => {
 
 const deleteJob = async (id) => {
     try {
-        const response = await axios.delete(`http://127.0.0.1:8000/api/job/delete/${id}`);
+        const response = await axios.delete(`http://127.0.0.1:8000/api/blog/delete/${id}`);
         $('#deleteJob').modal('hide');
-        successMessage('Job deleted successfully');
-        getJob();
+        successMessage('Blog deleted successfully');
+        getBlog();
     } catch (error) {
         errorMessage(error);
     }
@@ -228,13 +191,13 @@ const errorMessage = (title) => {
 };
 
 const clearVariables = () => {
-    job.value = {};
+    blog.value = {};
 }
 
 const getActivatedCategories = async () => {
     try {
-        const response = await axios.get('http://127.0.0.1:8000/api/category/all-enabled');
-        jobCategories.value = response.data;
+        const response = await axios.get('http://127.0.0.1:8000/api/blog/category/all-enabled');
+        blogCategories.value = response.data;
     } catch (error) {
         errorMessage(error);
     }
@@ -244,7 +207,7 @@ const closeDeleteModal = () => {
     $('#deleteJob').modal('hide');
 }
 onMounted(() => {
-    getJob();
+    getBlog();
     getActivatedCategories();
 });
 </script>

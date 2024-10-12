@@ -34,13 +34,8 @@
                                 <thead>
                                     <tr>
                                         <th>status</th>
-                                        <th>name</th>
-                                        <th>slug</th>
-                                        <th>description</th>
-                                        <th>company logo</th>
-                                        <th>working hours</th>
-                                        <th>company name</th>
-                                        <th>category</th>
+                                        <th>title</th>
+                                        <th>image</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -49,9 +44,7 @@
                                             <span v-if="blog.status == 1" class="badge badge-success">Published</span>
                                             <span v-if="blog.status == 0" class="badge badge-secondary">Disabled</span>
                                         </td>
-                                        <td>{{ blog.name }}</td>
-                                        <td>{{ blog.slug }}</td>
-                                        <td>{{ blog.description }}</td>
+                                        <td>{{ blog.title }}</td> 
                                         <td>{{ blog.image_id }}</td>
                                     </tr>
                                 </tbody>
