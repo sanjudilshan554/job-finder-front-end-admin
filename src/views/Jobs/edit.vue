@@ -75,7 +75,7 @@
                             </button>
                             <button type="button" class="btn btn-primary text-end ml-2" data-bs-toggle="modal"
                                 data-bs-target="#createJob" data-whatever="@mdo">
-                                Update
+                                Save
                             </button>
                         </div>
                     </div>

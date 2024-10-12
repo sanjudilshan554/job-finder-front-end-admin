@@ -86,6 +86,7 @@
                             <label for="message-text" class="col-form-label">Job Type:</label>
                             <div>
                                 <multiselect v-model="job.type" :options="jobTypes" :searchable="false"
+                                    label="name" track-by="id"
                                     :close-on-select="false" :show-labels="false" placeholder="Select Job">
                                 </multiselect>
                                 <pre class="language-json"><code>{{ value }}</code></pre>
@@ -186,17 +187,19 @@ const jobData = ref({});
 const jobCategories = ref([]);
 
 const jobTypes = [
-    'One',
-    'Two',
-    'Three',
-    'Four',
-    'Five'
+    {id:1, name:'Full Time'},
+    {id:2, name:'Part Time'},
+    {id:3, name:'Remote'},
+    {id:4, name:'Freelance'}, 
 ];
 
 const createJob = async () => {
     try {
         job.value.category_id = job.value.category.id;
         job.value.category_name = job.value.category.name;
+        job.value.type_id = job.value.type.id;
+        job.value.type_name = job.value.type.name;
+        
         const response = await axios.post('http://127.0.0.1:8000/api/job/store', job.value);
         closeCreateModal();
         clearVariables();
