@@ -28,12 +28,12 @@
                                     </div>
                                 </div>
 
-                                <div class="col-6">
+                                <div class="col-4">
                                     <label for="name">Job Name:</label>
                                     <input v-model="jobData.name" class="form-control form-control" type="text"
                                         placeholder="Job Name">
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
                                     <label for="name">Category:</label>
                                     <div>
                                         <multiselect v-model="jobData.category" :options="jobCategories"
@@ -43,7 +43,7 @@
                                         <pre class="language-json"><code>{{ value }}</code></pre>
                                     </div>
                                 </div>
-                                <div class="col-6 mt-3">
+                                <div class="col-4">
                                     <label for="name">Type:</label>
                                     <multiselect v-model="jobData.type" :options="jobTypes" :searchable="false"
                                         track-by="id" label="name" :close-on-select="false" :show-labels="false"
@@ -51,11 +51,7 @@
                                     </multiselect>
                                     <pre class="language-json"><code>{{ value }}</code></pre>
                                 </div>
-                                <div class="col-6 mt-3">
-                                    <label for="name">Experiences:</label>
-                                    <input v-model="jobData.experiences" class="form-control form-control" type="text"
-                                        placeholder="Experience">
-                                </div>
+                                
                                 <div class="col-6 mt-3">
                                     <label for="name">Location:</label>
                                     <input v-model="jobData.location" class="form-control form-control" type="text"
@@ -77,13 +73,18 @@
                                         placeholder="Company Name">
                                 </div>
                                 <div class="col-12 mt-3">
+                                    <label for="name">Experiences:</label>
+                                    <textarea v-model="jobData.experience" class="form-control form-control" type="text"
+                                        placeholder="Experience"/>
+                                </div>
+                                <div class="col-12 mt-3">
                                     <label for="name">Responsibilities:</label>
                                     <textarea v-model="jobData.responsibilities" class="form-control form-control"
                                         type="text" placeholder="Responsibilities" />
                                 </div>
                                 <div class="col-12 mt-3">
                                     <label for="name">Description:</label>
-                                    <textarea v-model="jobData.Description" class="form-control form-control"
+                                    <textarea v-model="jobData.description" class="form-control form-control"
                                         type="text" placeholder="Description" />
                                 </div>
                                 <div class="mt-3">
@@ -96,7 +97,7 @@
                                     data-bs-target="#createJob" data-whatever="@mdo">
                                     Delete
                                 </button>
-                                <button type="button" class="btn btn-primary text-end ml-2" data-bs-toggle="modal"
+                                <button type="submit" class="btn btn-primary text-end ml-2" data-bs-toggle="modal"
                                     data-bs-target="#createJob" data-whatever="@mdo">
                                     Save
                                 </button>
@@ -153,9 +154,15 @@ const getJob = async () => {
 
 const updateJob = async () => {
     try {
-        const response = await axios.post(`http://127.0.0.1:8000/api/job/update/${job_id}`, jobData.value);
+        jobData.value.category_id = jobData.value.category.id;
+        jobData.value.category_name = jobData.value.category.name;
+        jobData.value.type_id = jobData.value.type.id;
+        jobData.value.type_name = jobData.value.type.name;
+        console.log('jobData.value', jobData.value);
+        const response = await axios.post(`http://127.0.0.1:8000/api/job/update/${job_id.value}`, jobData.value);
         successMessage('Job updated successfully');
-        getJobs();
+        getJob();
+        console.log('update', response);
     } catch (error) {
         errorMessage(error);
     }
@@ -176,7 +183,7 @@ const deleteJob = async (id) => {
         const response = await axios.delete(`http://127.0.0.1:8000/api/job/delete/${id}`);
         $('#deleteJob').modal('hide');
         successMessage('Job deleted successfully');
-        getJobs();
+        getJob();
     } catch (error) {
         errorMessage(error);
     }
