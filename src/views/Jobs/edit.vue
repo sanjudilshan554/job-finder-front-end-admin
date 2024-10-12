@@ -12,73 +12,97 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Jobs</h4>
-                        <h6 class="card-subtitle">Add class <code>.table</code></h6>
+                    <form @submit.prevent="updateJob" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <!-- <h4 class="card-title">Jobs</h4>
+                        <h6 class="card-subtitle">Add class <code>.table</code></h6> -->
 
-                        <div class="row">
-                            <div class="col-6">
-                                <label for="name">Job Name:</label>
-                                <input class="form-control form-control" type="text" placeholder="Job Name">
-                            </div>
-                            <div class="col-6">
-                                <label for="name">Category:</label>
-                                <div>
-                                    <multiselect v-model="job.category" :options="jobCategories" :searchable="false"
-                                        track-by="id" label="name" :close-on-select="false" :show-labels="false" 
-                                        placeholder="Select Category">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Status:</label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                v-model="jobData.status" id="flexSwitchCheckDefault">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="name">Job Name:</label>
+                                    <input v-model="jobData.name" class="form-control form-control" type="text"
+                                        placeholder="Job Name">
+                                </div>
+                                <div class="col-6">
+                                    <label for="name">Category:</label>
+                                    <div>
+                                        <multiselect v-model="jobData.category" :options="jobCategories"
+                                            :searchable="false" track-by="id" label="name" :close-on-select="false"
+                                            :show-labels="false" placeholder="Select Category">
+                                        </multiselect>
+                                        <pre class="language-json"><code>{{ value }}</code></pre>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <label for="name">Type:</label>
+                                    <multiselect v-model="jobData.type" :options="jobTypes" :searchable="false"
+                                        track-by="id" label="name" :close-on-select="false" :show-labels="false"
+                                        placeholder="Select Job Type">
                                     </multiselect>
                                     <pre class="language-json"><code>{{ value }}</code></pre>
                                 </div>
+                                <div class="col-6 mt-3">
+                                    <label for="name">Experiences:</label>
+                                    <input v-model="jobData.experiences" class="form-control form-control" type="text"
+                                        placeholder="Experience">
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <label for="name">Location:</label>
+                                    <input v-model="jobData.location" class="form-control form-control" type="text"
+                                        placeholder="Location">
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <label for="name">Salary:</label>
+                                    <input v-model="jobData.salary" class="form-control form-control" type="text"
+                                        placeholder="Salary">
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <label for="name">Working hours:</label>
+                                    <input v-model="job.working_hours" class="form-control form-control" type="text"
+                                        placeholder="Working Hours">
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <label for="name">Company name:</label>
+                                    <input v-model="jobData.company_name" class="form-control form-control" type="text"
+                                        placeholder="Company Name">
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <label for="name">Responsibilities:</label>
+                                    <textarea v-model="jobData.responsibilities" class="form-control form-control"
+                                        type="text" placeholder="Responsibilities" />
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <label for="name">Description:</label>
+                                    <textarea v-model="jobData.Description" class="form-control form-control"
+                                        type="text" placeholder="Description" />
+                                </div>
+                                <div class="mt-3">
+                                    <label for="name">Image:</label>
+                                    <input class="form-control form-control" type="file" placeholder=".form-control">
+                                </div>
                             </div>
-                            <div class="col-6 mt-3">
-                                <label for="name">Type:</label>
-                                <input class="form-control form-control" type="text" placeholder=".form-control">
-                            </div>
-                            <div class="col-6 mt-3">
-                                <label for="name">Experiences:</label>
-                                <input class="form-control form-control" type="text" placeholder=".form-control">
-                            </div>
-                            <div class="col-6 mt-3">
-                                <label for="name">Location:</label>
-                                <input class="form-control form-control" type="text" placeholder=".form-control">
-                            </div>
-                            <div class="col-6 mt-3">
-                                <label for="name">Salary:</label>
-                                <input class="form-control form-control" type="text" placeholder=".form-control">
-                            </div>
-                            <div class="col-6 mt-3">
-                                <label for="name">Working hours:</label>
-                                <input class="form-control form-control" type="text" placeholder=".form-control">
-                            </div>
-                            <div class="col-6 mt-3">
-                                <label for="name">Company name:</label>
-                                <input class="form-control form-control" type="text" placeholder=".form-control">
-                            </div>
-                            <div class="col-12 mt-3">
-                                <label for="name">Responsibilities:</label>
-                                <textarea class="form-control form-control" type="text" placeholder=".form-control" />
-                            </div>
-                            <div class="col-12 mt-3">
-                                <label for="name">Description:</label>
-                                <textarea class="form-control form-control" type="text" placeholder=".form-control" />
-                            </div>
-                            <div class="mt-3">
-                                <label for="name">Image:</label>
-                                <input class="form-control form-control" type="file" placeholder=".form-control">
+                            <div class="text-end mt-3">
+                                <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal"
+                                    data-bs-target="#createJob" data-whatever="@mdo">
+                                    Delete
+                                </button>
+                                <button type="button" class="btn btn-primary text-end ml-2" data-bs-toggle="modal"
+                                    data-bs-target="#createJob" data-whatever="@mdo">
+                                    Save
+                                </button>
                             </div>
                         </div>
-                        <div class="text-end mt-3">
-                            <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal"
-                                data-bs-target="#createJob" data-whatever="@mdo">
-                                Delete
-                            </button>
-                            <button type="button" class="btn btn-primary text-end ml-2" data-bs-toggle="modal"
-                                data-bs-target="#createJob" data-whatever="@mdo">
-                                Save
-                            </button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -100,6 +124,13 @@ const jobData = ref({});
 const job_id = ref(route.params.job_id);
 const jobCategories = ref([]);
 
+const jobTypes = [
+    { id: 1, name: 'Full Time' },
+    { id: 2, name: 'Part Time' },
+    { id: 3, name: 'Remote' },
+    { id: 4, name: 'Freelance' },
+];
+
 const getJob = async () => {
     try {
         const response = await axios.get(`http://127.0.0.1:8000/api/job/get/${job_id.value}`);
@@ -109,6 +140,10 @@ const getJob = async () => {
         } else {
             jobData.value.status = true;
         }
+
+        jobData.value.category = { id: jobData.value.category_id, name: jobData.value.category_name };
+        jobData.value.type = { id: jobData.value.type_id, name: jobData.value.type_name };
+
         console.log('job', response);
         $('#editJob').modal('show');
     } catch (error) {
@@ -116,10 +151,9 @@ const getJob = async () => {
     }
 }
 
-const updateJob = async (id) => {
+const updateJob = async () => {
     try {
-        const response = await axios.post(`http://127.0.0.1:8000/api/job/update/${id}`, jobData.value);
-        $('#editJob').modal('hide');
+        const response = await axios.post(`http://127.0.0.1:8000/api/job/update/${job_id}`, jobData.value);
         successMessage('Job updated successfully');
         getJobs();
     } catch (error) {
