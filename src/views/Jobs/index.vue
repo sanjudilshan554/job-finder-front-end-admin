@@ -2,20 +2,23 @@
     <!-- Main -->
     <div class="p-2">
         <!-- Header -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mt-4">
             <div class="text-start">
                 <h2 class="fw-bold">Job management</h2>
             </div>
             <div class="text-end">
+                <a href="jobs/category" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
+                    <i class="bi bi-boxes"></i> Category
+                </a>
                 <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
                     data-bs-target="#createJob" data-whatever="@mdo">
-                    Create
+                    <i class="bi bi-plus-square"></i>  Create
                 </button>
             </div>
         </div>
 
         <!-- Content -->
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">

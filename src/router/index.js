@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/Dashboard/index.vue'
 import Profile from '../views/Profile/index.vue'
-import Category from '../views/Category/index.vue'
+import Category from '../views/Jobs/components/Category/index.vue'
 import Jobs from '../views/Jobs/index.vue'
 import EditJob from '../views/Jobs/edit.vue'
 import Blogs from '../views/Blogs/index.vue'
-import BlogCategories from '../views/BlogCategory/index.vue'
+import BlogCategories from '../views/Blogs/Components/BlogCategory/index.vue'
 import EditBLog from '../views/Blogs/edit.vue'
-import Tag from '../views/BlogTag/index.vue'
+import Tag from '../views/Blogs/Components/BlogTag/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,8 +23,8 @@ const router = createRouter({
       component: Profile
     }, 
     {
-      path: '/category',
-      name: 'category',
+      path: '/jobs/category',
+      name: 'job-category',
       component: Category
     }, 
     {

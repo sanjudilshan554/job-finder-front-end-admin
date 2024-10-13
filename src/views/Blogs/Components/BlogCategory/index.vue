@@ -2,7 +2,7 @@
     <!-- Main -->
     <div class="p-2">
         <!-- Header -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mt-4">
             <div class="text-start">
                 <h2 class="fw-bold">Blog Category management</h2>
             </div>
@@ -15,7 +15,7 @@
         </div>
 
         <!-- Content -->
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">

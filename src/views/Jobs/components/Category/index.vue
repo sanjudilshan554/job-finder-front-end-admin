@@ -2,9 +2,9 @@
     <!-- Main -->
     <div class="p-2">
         <!-- Header -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mt-4">
             <div class="text-start">
-                <h2 class="fw-bold">Category management</h2>
+                <h2 class="fw-bold">Job Category management</h2>
             </div>
             <div class="text-end">
                 <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
@@ -15,11 +15,11 @@
         </div>
 
         <!-- Content -->
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Categories</h4>
+                        <h4 class="card-title">Job / Categories</h4>
                         <h6 class="card-subtitle">Add class <code>.table</code></h6>
                         <div class="table-responsive">
                             <table class="table">
