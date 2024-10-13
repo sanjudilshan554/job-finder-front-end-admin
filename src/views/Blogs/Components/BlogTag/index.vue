@@ -9,7 +9,7 @@
             <div class="text-end">
                 <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
                     data-bs-target="#createTag" data-whatever="@mdo">
-                    Create
+                    <i class="bi bi-plus-square"></i>   Create
                 </button>
             </div>
         </div>
