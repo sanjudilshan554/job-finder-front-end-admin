@@ -7,14 +7,12 @@
                 <h2 class="fw-bold">Blog management</h2>
             </div>
             <div class="text-end">
-                <a href="blogs/category" type="button" class="btn btn-primary text-end mr-2" 
-                     data-whatever="@mdo">
+                <a href="blogs/category" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
                     <i class="bi bi-boxes"></i> Category
                 </a>
-                <button type="button" class="btn btn-primary text-end mr-2" data-bs-toggle="modal"
-                    data-bs-target="#createBlog" data-whatever="@mdo">
+                <a href="blogs/tag" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
                     <i class="bi bi-tags"></i> Tags
-                </button>
+                </a>
                 <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
                     data-bs-target="#createBlog" data-whatever="@mdo">
                     <i class="bi bi-plus-square"></i> Create
@@ -39,12 +37,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="blog in blogs" class="cursor-pointer">
+                                    <tr v-for="blog in blogs" class="cursor-pointer"
+                                        @click.prevent="visitBlog(blog.id)">
                                         <td>
                                             <span v-if="blog.status == 1" class="badge badge-success">Published</span>
                                             <span v-if="blog.status == 0" class="badge badge-secondary">Disabled</span>
                                         </td>
-                                        <td>{{ blog.title }}</td> 
+                                        <td>{{ blog.title }}</td>
                                         <td>{{ blog.image_id }}</td>
                                     </tr>
                                 </tbody>
@@ -164,7 +163,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
@@ -181,7 +180,7 @@ const createBlog = async () => {
     try {
         blog.value.category_id = blog.value.category.id;
         blog.value.category_name = blog.value.category.name;
-        
+
         const response = await axios.post('http://127.0.0.1:8000/api/blog/store', blog.value);
         closeCreateModal();
         clearVariables();
@@ -196,7 +195,6 @@ const createBlog = async () => {
 const getActivatedCategories = async () => {
     try {
         const response = await axios.get('http://127.0.0.1:8000/api/blog/category/all-enabled');
-        console.log('respnose',response);
         blogCategories.value = response.data;
     } catch (error) {
         errorMessage(error);
@@ -220,37 +218,12 @@ const getJobs = async () => {
     }
 }
 
-const editJob = async (id) => {
-    try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/blog/get/${id}`);
-        blogData.value = response.data;
-        if (blogData.value.status == 0) {
-            blogData.value.status = false;
-        } else {
-            blogData.value.status = true;
-        }
-        $('#editJob').modal('show');
-    } catch (error) {
-        errorMessage(error);
-    }
-}
-
 const updateJob = async (id) => {
     try {
         const response = await axios.post(`http://127.0.0.1:8000/api/blog/update/${id}`, blogData.value);
         $('#editJob').modal('hide');
         successMessage('Blog updated successfully');
         getJobs();
-    } catch (error) {
-        errorMessage(error);
-    }
-}
-
-const confirmDelete = async (id) => {
-    try {
-        $('#deleteJob').modal('show');
-        const response = await axios.get(`http://127.0.0.1:8000/api/blog/get/${id}`);
-        blogData.value = response.data;
     } catch (error) {
         errorMessage(error);
     }
@@ -312,6 +285,11 @@ const clearVariables = () => {
 const closeDeleteModal = () => {
     $('#deleteJob').modal('hide');
 }
+
+const visitBlog = (id) => {
+    router.push({ name: 'edit-blog', params: { blog_id: id } });
+}
+
 onMounted(() => {
     getJobs();
     getActivatedCategories();

@@ -36,7 +36,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="job in jobs" class="cursor-pointer">
+                                    <tr v-for="job in jobs" class="cursor-pointer" @click.prevent="visitJob(job.id)">
                                         <td>
                                             <span v-if="job.status == 1" class="badge badge-success">Published</span>
                                             <span v-if="job.status == 0" class="badge badge-secondary">Disabled</span>
@@ -329,6 +329,11 @@ const clearVariables = () => {
 const closeDeleteModal = () => {
     $('#deleteJob').modal('hide');
 }
+
+const visitJob = (id) => {
+    router.push({ name: 'edit-job', params: { job_id: id } });
+}
+
 onMounted(() => {
     getJobs();
     getActivatedCategories();

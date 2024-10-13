@@ -43,23 +43,23 @@
                                         </multiselect>
                                         <pre class="language-json"><code>{{ value }}</code></pre>
                                     </div>
-                                </div>  
+                                </div>
 
                                 <div class="col-12 mt-3">
                                     <label for="name">View Text:</label>
                                     <textarea v-model="blogData.view_text" class="form-control form-control" type="text"
-                                        placeholder="View Text"/>
+                                        placeholder="View Text" />
                                 </div>
                                 <div class="col-12 mt-3">
                                     <label for="name">Text:</label>
-                                    <textarea v-model="blogData.text" class="form-control form-control"
-                                        type="text" placeholder="Text" />
-                                </div> 
+                                    <textarea v-model="blogData.text" class="form-control form-control" type="text"
+                                        placeholder="Text" />
+                                </div>
                                 <div class="col-12 mt-3">
                                     <label for="name">Meta tags:</label>
-                                    <textarea v-model="blogData.meta_tags" class="form-control form-control"
-                                        type="text" placeholder="Meta Tags" />
-                                </div> 
+                                    <textarea v-model="blogData.meta_tags" class="form-control form-control" type="text"
+                                        placeholder="Meta Tags" />
+                                </div>
                                 <div class="mt-3">
                                     <label for="name">Image:</label>
                                     <input class="form-control form-control" type="file" placeholder=".form-control">
@@ -67,7 +67,7 @@
                             </div>
                             <div class="text-end mt-3">
                                 <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal"
-                                    data-bs-target="#createJob" data-whatever="@mdo">
+                                    @click.prevent="confirmDelete()" data-bs-target="#createJob" data-whatever="@mdo">
                                     Delete
                                 </button>
                                 <button type="submit" class="btn btn-primary text-end ml-2" data-bs-toggle="modal"
@@ -80,6 +80,31 @@
                 </div>
             </div>
         </div>
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteBlog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            @click.prevent="closeDeleteModal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this blog?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            @click.prevent="closeDeleteModal">Close</button>
+                        <button type="button" class="btn btn-danger"
+                            @click.prevent="deleteBlog()">delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -88,15 +113,17 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+
 import Multiselect from 'vue-multiselect';
 const route = useRoute();
+const router = useRouter();
 
 const blog = ref({});
 const blogs = ref([]);
 const blogData = ref({});
 const blog_id = ref(route.params.blog_id);
-const blogCategories = ref([]); 
+const blogCategories = ref([]);
 
 const getBlog = async () => {
     try {
@@ -131,22 +158,22 @@ const updateBlog = async () => {
     }
 }
 
-const confirmDelete = async (id) => {
+const confirmDelete = async () => {
     try {
-        $('#deleteJob').modal('show');
-        const response = await axios.get(`http://127.0.0.1:8000/api/blog/get/${id}`);
+        $('#deleteBlog').modal('show');
+        const response = await axios.get(`http://127.0.0.1:8000/api/blog/get/${blog_id.value}`);
         blogData.value = response.data;
     } catch (error) {
         errorMessage(error);
     }
 }
 
-const deleteJob = async (id) => {
+const deleteBlog = async (id) => {
     try {
-        const response = await axios.delete(`http://127.0.0.1:8000/api/blog/delete/${id}`);
-        $('#deleteJob').modal('hide');
+        const response = await axios.delete(`http://127.0.0.1:8000/api/blog/delete/${blog_id.value}`);
+        $('#deleteBlog').modal('hide');
         successMessage('Blog deleted successfully');
-        getBlog();
+        router.push({ name: 'blogs' });
     } catch (error) {
         errorMessage(error);
     }
@@ -204,7 +231,7 @@ const getActivatedCategories = async () => {
 }
 
 const closeDeleteModal = () => {
-    $('#deleteJob').modal('hide');
+    $('#deleteBlog').modal('hide');
 }
 onMounted(() => {
     getBlog();
