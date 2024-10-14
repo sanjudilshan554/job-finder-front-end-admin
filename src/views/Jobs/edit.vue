@@ -52,15 +52,20 @@
                                     <pre class="language-json"><code>{{ value }}</code></pre>
                                 </div>
                                 
-                                <div class="col-6 mt-3">
+                                <div class="col-4 mt-3">
                                     <label for="name">Location:</label>
                                     <input v-model="jobData.location" class="form-control form-control" type="text"
                                         placeholder="Location">
                                 </div>
-                                <div class="col-6 mt-3">
+                                <div class="col-4 mt-3">
                                     <label for="name">Salary:</label>
                                     <input v-model="jobData.salary" class="form-control form-control" type="text"
                                         placeholder="Salary">
+                                </div>
+                                <div class="col-4 mt-3">
+                                    <label for="name">Vacancy:</label>
+                                    <input v-model="jobData.no_of_vacancy" class="form-control form-control" type="text"
+                                        placeholder="Number of Vacancy">
                                 </div>
                                 <div class="col-6 mt-3">
                                     <label for="name">Working hours:</label>
@@ -73,9 +78,14 @@
                                         placeholder="Company Name">
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <label for="name">Experiences:</label>
-                                    <textarea v-model="jobData.experience" class="form-control form-control" type="text"
-                                        placeholder="Experience"/>
+                                    <label for="name">Description:</label>
+                                    <textarea v-model="jobData.description" class="form-control form-control"
+                                        type="text" placeholder="Description" />
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <label for="name">Requirements:</label>
+                                    <textarea v-model="jobData.requirements" class="form-control form-control"
+                                        type="text" placeholder="Requirements" />
                                 </div>
                                 <div class="col-12 mt-3">
                                     <label for="name">Responsibilities:</label>
@@ -83,10 +93,12 @@
                                         type="text" placeholder="Responsibilities" />
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <label for="name">Description:</label>
-                                    <textarea v-model="jobData.description" class="form-control form-control"
-                                        type="text" placeholder="Description" />
+                                    <label for="name">Education + Experiences:</label>
+                                    <textarea v-model="jobData.experience" class="form-control form-control" type="text"
+                                        placeholder="Experience"/>
                                 </div>
+                                
+                                
                                 <div class="mt-3">
                                     <label for="name">Image:</label>
                                     <input class="form-control form-control" type="file" placeholder=".form-control">
@@ -94,7 +106,7 @@
                             </div>
                             <div class="text-end mt-3">
                                 <button type="button" class="btn btn-danger text-end" data-bs-toggle="modal"
-                                    data-bs-target="#createJob" data-whatever="@mdo">
+                                    @click.prevent="confirmDelete()" data-bs-target="#createJob" data-whatever="@mdo">
                                     Delete
                                 </button>
                                 <button type="submit" class="btn btn-primary text-end ml-2" data-bs-toggle="modal"
@@ -107,6 +119,31 @@
                 </div>
             </div>
         </div>
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteJob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            @click.prevent="closeDeleteModal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this blog?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            @click.prevent="closeDeleteModal">Close</button>
+                        <button type="button" class="btn btn-danger"
+                            @click.prevent="deleteJob()">delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -115,9 +152,10 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Multiselect from 'vue-multiselect';
 const route = useRoute();
+const router = useRouter();
 
 const job = ref({});
 const jobs = ref([]);
@@ -168,22 +206,22 @@ const updateJob = async () => {
     }
 }
 
-const confirmDelete = async (id) => {
+const confirmDelete = async () => {
     try {
         $('#deleteJob').modal('show');
-        const response = await axios.get(`http://127.0.0.1:8000/api/job/get/${id}`);
+        const response = await axios.get(`http://127.0.0.1:8000/api/job/get/${job_id.value}`);
         jobData.value = response.data;
     } catch (error) {
         errorMessage(error);
     }
 }
 
-const deleteJob = async (id) => {
+const deleteJob = async () => {
     try {
-        const response = await axios.delete(`http://127.0.0.1:8000/api/job/delete/${id}`);
+        const response = await axios.delete(`http://127.0.0.1:8000/api/job/delete/${job_id.value}`);
         $('#deleteJob').modal('hide');
         successMessage('Job deleted successfully');
-        getJob();
+        router.push({name: 'jobs'});
     } catch (error) {
         errorMessage(error);
     }
@@ -233,7 +271,7 @@ const clearVariables = () => {
 
 const getActivatedCategories = async () => {
     try {
-        const response = await axios.get('http://127.0.0.1:8000/api/category/all-enabled');
+        const response = await axios.get('http://127.0.0.1:8000/api/job/category/all-enabled');
         jobCategories.value = response.data;
     } catch (error) {
         errorMessage(error);

@@ -3,6 +3,7 @@ import Dashboard from '../views/Dashboard/index.vue'
 import Profile from '../views/Profile/index.vue'
 import Category from '../views/Jobs/components/Category/index.vue'
 import Jobs from '../views/Jobs/index.vue'
+import JobCompany from '../views/Jobs/components/Company/index.vue'
 import EditJob from '../views/Jobs/edit.vue'
 import Blogs from '../views/Blogs/index.vue'
 import BlogCategories from '../views/Blogs/Components/BlogCategory/index.vue'
@@ -36,6 +37,11 @@ const router = createRouter({
       path: '/jobs/edit-job/:job_id',
       name: 'edit-job',
       component: EditJob
+    },
+    {
+      path: '/jobs/company',
+      name: 'job-company',
+      component: JobCompany
     }, 
     {
       path: '/blogs',

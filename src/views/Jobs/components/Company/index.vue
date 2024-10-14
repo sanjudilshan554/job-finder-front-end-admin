@@ -4,11 +4,11 @@
         <!-- Header -->
         <div class="d-flex justify-content-between mt-4">
             <div class="text-start">
-                <h2 class="fw-bold">Job Category management</h2>
+                <h2 class="fw-bold">Job Company management</h2>
             </div>
             <div class="text-end">
                 <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
-                    data-bs-target="#createCategory" data-whatever="@mdo">
+                    data-bs-target="#createCompany" data-whatever="@mdo">
                     <i class="bi bi-plus-square"></i> Create
                 </button>
             </div>
@@ -19,7 +19,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Job / Categories</h4>
+                        <h4 class="card-title">Job / Companies</h4>
                         <h6 class="card-subtitle">Add class <code>.table</code></h6>
                         <div class="table-responsive">
                             <table class="table">
@@ -27,27 +27,33 @@
                                     <tr>
                                         <th>status</th>
                                         <th>name</th>
-                                        <th>slug</th>
+                                        <th>web</th>
+                                        <th>email</th>
+                                        <th>location</th>
+                                        <th>address</th>
                                         <th>description</th>
                                         <th>image</th>
-                                        <!-- <th>action</th> -->
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="category in categories" class="cursor-pointer">
+                                    <tr v-for="company in companies" class="cursor-pointer">
                                         <td>
-                                            <span v-if="category.status == 1" class="badge badge-success">Enabled</span>
-                                            <span v-if="category.status == 0"
+                                            <span v-if="company.status == 1" class="badge badge-success">Enabled</span>
+                                            <span v-if="company.status == 0"
                                                 class="badge badge-secondary">Disabled</span>
                                         </td>
-                                        <td>{{ category.name }}</td>
-                                        <td>{{ category.slug }}</td>
-                                        <td>{{ category.description }}</td>
-                                        <td>{{ category.image_id }}</td>
+                                        <td>{{ company.name }}</td>
+                                        <td>{{ company.web_address }}</td>
+                                        <td>{{ company.email }}</td>
+                                        <td>{{ company.location }}</td>
+                                        <td>{{ company.address }}</td>
+                                        <td>{{ company.description }}</td>
+                                        <td>{{ company.image_id }}</td>
                                         <td class="d-flex">
-                                            <div class="" @click.prevent="editCategory(category.id)"><i
+                                            <div class="" @click.prevent="editCompany(company.id)"><i
                                                     class="bi bi-pencil"></i></div>
-                                            <div class="" @click.prevent="confirmDelete(category.id)"><i
+                                            <div class="" @click.prevent="confirmDelete(company.id)"><i
                                                     class="bi bi-trash ps-2 text-danger"></i></div>
                                         </td>
                                     </tr>
@@ -61,34 +67,55 @@
     </div>
 
     <!-- Create Modal -->
-    <div class="modal fade" id="createCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createCompany" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New category</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">New Company</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                         @click="closeCreateModal">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="createCategory">
+                <form @submit.prevent="createCompany">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
-                            <input type="text" class="form-control" id="recipient-name" v-model="category.name">
+                            <input type="text" class="form-control" id="recipient-name" placeholder="Company Name"
+                                v-model="company.name">
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">Image:</label>
-                            <input type="file" class="form-control" id="recipient-name">
+                            <label for="recipient-name" class="col-form-label">Web Address:</label>
+                            <input type="text" class="form-control" id="recipient-name" placeholder="Web Address"
+                                v-model="company.web_address">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Email:</label>
+                            <input type="text" v-model="company.email" class="form-control" id="recipient-name"
+                                placeholder="Email Address">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Location:</label>
+                            <input type="text" v-model="company.location" class="form-control" id="recipient-name"
+                                placeholder="Location">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Address:</label>
+                            <input type="text" v-model="company.address" class="form-control" id="recipient-name"
+                                placeholder="Address">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Description:</label>
-                            <textarea class="form-control" id="message-text" v-model="category.description"></textarea>
+                            <textarea class="form-control" id="message-text" v-model="company.description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Image:</label>
+                            <input type="file" class="form-control" id="recipient-name" placeholder="Image">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Status:</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" v-model="category.status"
+                                <input class="form-check-input" type="checkbox" role="switch" v-model="company.status"
                                     id="flexSwitchCheckDefault">
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox
                                     input</label>
@@ -107,35 +134,55 @@
     </div>
 
     <!-- Edit Modal -->
-    <div class="modal fade" id="editCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editCompany" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New category</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">New company</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeEditModal">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="updateCategory(categoryData.id)">
+                <form @submit.prevent="updateCategory(companyData.id)">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
-                            <input type="text" class="form-control" id="recipient-name" v-model="categoryData.name">
+                            <input type="text" class="form-control" id="recipient-name" v-model="companyData.name">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Web Address:</label>
+                            <input type="text" class="form-control" id="recipient-name" placeholder="Web Address"
+                                v-model="companyData.web_address">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Email:</label>
+                            <input type="text" v-model="companyData.email" class="form-control" id="recipient-name"
+                                placeholder="Email Address">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Location:</label>
+                            <input type="text" v-model="companyData.location" class="form-control" id="recipient-name"
+                                placeholder="Location">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Address:</label>
+                            <input type="text" v-model="companyData.address" class="form-control" id="recipient-name"
+                                placeholder="Address">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="message-text"
+                                v-model="companyData.description"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Image:</label>
                             <input type="file" class="form-control" id="recipient-name">
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">Description:</label>
-                            <textarea class="form-control" id="message-text"
-                                v-model="categoryData.description"></textarea>
-                        </div>
-                        <div class="form-group">
                             <label for="message-text" class="col-form-label">Status:</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch"
-                                    v-model="categoryData.status" id="flexSwitchCheckDefault">
+                                    v-model="companyData.status" id="flexSwitchCheckDefault">
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox
                                     input</label>
                             </div>
@@ -152,7 +199,7 @@
     </div>
 
     <!-- Delete Modal -->
-    <div class="modal fade" id="deleteCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="deleteCompany" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -164,13 +211,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete this category?
+                    Are you sure you want to delete this company?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
                         @click.prevent="closeDeleteModal">Close</button>
                     <button type="button" class="btn btn-danger"
-                        @click.prevent="deleteCategory(categoryData.id)">delete</button>
+                        @click.prevent="deleteCompany(companyData.id)">delete</button>
                 </div>
             </div>
         </div>
@@ -183,16 +230,16 @@ import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
-const category = ref({});
-const categories = ref([]);
-const categoryData = ref({});
+const company = ref({});
+const companies = ref([]);
+const companyData = ref({});
 
-const createCategory = async () => {
+const createCompany = async () => {
     try {
-        const response = await axios.post('http://127.0.0.1:8000/api/job/category/store', category.value);
+        const response = await axios.post('http://127.0.0.1:8000/api/job/company/store', company.value);
         closeCreateModal();
         clearVariables();
-        successMessage('Category created successfully');
+        successMessage('Company created successfully');
         getCategories();
     } catch (error) {
         errorMessage(error);
@@ -200,32 +247,32 @@ const createCategory = async () => {
 }
 
 const closeCreateModal = () => {
-    $('#createCategory').modal('hide');
+    $('#createCompany').modal('hide');
 }
 
 const closeEditModal = () => {
-    $('#editCategory').modal('hide');
+    $('#editCompany').modal('hide');
 }
 
 const getCategories = async () => {
     try {
-        const response = await axios.get('http://127.0.0.1:8000/api/job/category/all');
-        categories.value = response.data;
+        const response = await axios.get('http://127.0.0.1:8000/api/job/company/all');
+        companies.value = response.data;
     } catch (error) {
         errorMessage(error);
     }
 }
 
-const editCategory = async (id) => {
+const editCompany = async (id) => {
     try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/job/category/get/${id}`);
-        categoryData.value = response.data;
-        if (categoryData.value.status == 0) {
-            categoryData.value.status = false;
+        const response = await axios.get(`http://127.0.0.1:8000/api/job/company/get/${id}`);
+        companyData.value = response.data;
+        if (companyData.value.status == 0) {
+            companyData.value.status = false;
         } else {
-            categoryData.value.status = true;
+            companyData.value.status = true;
         }
-        $('#editCategory').modal('show');
+        $('#editCompany').modal('show');
     } catch (error) {
         errorMessage(error);
     }
@@ -233,9 +280,9 @@ const editCategory = async (id) => {
 
 const updateCategory = async (id) => {
     try {
-        const response = await axios.post(`http://127.0.0.1:8000/api/job/category/update/${id}`, categoryData.value);
-        $('#editCategory').modal('hide');
-        successMessage('Category updated successfully');
+        const response = await axios.post(`http://127.0.0.1:8000/api/job/company/update/${id}`, companyData.value);
+        $('#editCompany').modal('hide');
+        successMessage('Company updated successfully');
         getCategories();
     } catch (error) {
         errorMessage(error);
@@ -244,19 +291,19 @@ const updateCategory = async (id) => {
 
 const confirmDelete = async (id) => {
     try {
-        $('#deleteCategory').modal('show');
-        const response = await axios.get(`http://127.0.0.1:8000/api/job/category/get/${id}`);
-        categoryData.value = response.data;
+        $('#deleteCompany').modal('show');
+        const response = await axios.get(`http://127.0.0.1:8000/api/job/company/get/${id}`);
+        companyData.value = response.data;
     } catch (error) {
         errorMessage(error);
     }
 }
 
-const deleteCategory = async (id) => {
+const deleteCompany = async (id) => {
     try {
-        const response = await axios.delete(`http://127.0.0.1:8000/api/job/category/delete/${id}`);
-        $('#deleteCategory').modal('hide');
-        successMessage('Category deleted successfully');
+        const response = await axios.delete(`http://127.0.0.1:8000/api/job/company/delete/${id}`);
+        $('#deleteCompany').modal('hide');
+        successMessage('Company deleted successfully');
         getCategories();
     } catch (error) {
         errorMessage(error);
@@ -302,11 +349,11 @@ const errorMessage = (title) => {
 };
 
 const clearVariables = () => {
-    category.value = {};
+    company.value = {};
 }
 
 const closeDeleteModal = () => {
-    $('#deleteCategory').modal('hide');
+    $('#deleteCompany').modal('hide');
 }
 onMounted(() => {
     getCategories();

@@ -7,6 +7,9 @@
                 <h2 class="fw-bold">Job management</h2>
             </div>
             <div class="text-end">
+                <a href="jobs/company" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
+                    <i class="bi bi-buildings"></i> Company
+                </a>
                 <a href="jobs/category" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
                     <i class="bi bi-boxes"></i> Category
                 </a>
