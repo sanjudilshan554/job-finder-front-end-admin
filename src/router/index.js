@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/Dashboard/index.vue'
 import Profile from '../views/Profile/index.vue'
-import Category from '../views/Jobs/components/Category/index.vue'
+import JobCategory from '../views/Jobs/components/Category/index.vue'
 import Jobs from '../views/Jobs/index.vue'
 import JobCompany from '../views/Jobs/components/Company/index.vue'
+import DeletedJob from '../views/Jobs/components/DeletedList/index.vue'
 import EditJob from '../views/Jobs/edit.vue'
 import Blogs from '../views/Blogs/index.vue'
 import BlogCategories from '../views/Blogs/Components/BlogCategory/index.vue'
@@ -26,7 +27,7 @@ const router = createRouter({
     {
       path: '/jobs/category',
       name: 'job-category',
-      component: Category
+      component: JobCategory
     }, 
     {
       path: '/jobs',
@@ -42,6 +43,11 @@ const router = createRouter({
       path: '/jobs/company',
       name: 'job-company',
       component: JobCompany
+    }, 
+    {
+      path: '/jobs/deleted-list',
+      name: 'deleted-job',
+      component: DeletedJob
     }, 
     {
       path: '/blogs',

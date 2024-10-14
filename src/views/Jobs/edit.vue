@@ -69,7 +69,7 @@
                                 </div>
                                 <div class="col-6 mt-3">
                                     <label for="name">Working hours:</label>
-                                    <input v-model="job.working_hours" class="form-control form-control" type="text"
+                                    <input v-model="jobData.working_hours" class="form-control form-control" type="text"
                                         placeholder="Working Hours">
                                 </div>
                                 <div class="col-6 mt-3">

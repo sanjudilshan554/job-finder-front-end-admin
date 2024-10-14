@@ -7,6 +7,9 @@
                 <h2 class="fw-bold">Job management</h2>
             </div>
             <div class="text-end">
+                <a href="jobs/deleted-list" type="button" class="btn btn-danger text-end mr-2" data-whatever="@mdo">
+                    <i class="bi bi-trash"></i> Deleted list
+                </a>
                 <a href="jobs/company" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
                     <i class="bi bi-buildings"></i> Company
                 </a>
@@ -50,6 +53,10 @@
                                         <td>{{ job.name }}</td>
                                         <td>{{ job.slug }}</td>
                                         <td>{{ job.description }}</td>
+                                        <td></td>
+                                        <td>{{ job.working_hours }}</td>
+                                        <td>{{ job.company_name }}</td>
+                                        <td>{{ job.category_name }}</td>
                                         <td>{{ job.image_id }}</td>
                                     </tr>
                                 </tbody>
