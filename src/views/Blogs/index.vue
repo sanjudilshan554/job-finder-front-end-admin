@@ -77,6 +77,7 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Title:</label>
                             <input type="text" class="form-control" id="recipient-name" v-model="blog.title">
+                            <span class="text-danger" v-if="errors?.title">{{ errors.title[0] }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Blog Category:</label>
@@ -85,7 +86,7 @@
                                     track-by="id" label="name" :close-on-select="false" :show-labels="false"
                                     placeholder="Select Category">
                                 </multiselect>
-                                <pre class="language-json"><code>{{ value }}</code></pre>
+                                <span class="text-danger" v-if="errors?.category_id">{{ errors.category_id[0] }}</span>
                             </div>
                         </div>
                     </div>
@@ -181,12 +182,14 @@ const blog = ref({});
 const blogs = ref([]);
 const blogData = ref({});
 const blogCategories = ref([]);
+const errors = ref({});
 
 const createBlog = async () => {
     try {
-        blog.value.category_id = blog.value.category.id;
-        blog.value.category_name = blog.value.category.name;
-
+        if (blog.value.category?.id) {
+            blog.value.category_id = blog.value.category.id;
+            blog.value.category_name = blog.value.category.name;
+        }
         const response = await axios.post('http://127.0.0.1:8000/api/blog/store', blog.value);
         closeCreateModal();
         clearVariables();
@@ -194,7 +197,10 @@ const createBlog = async () => {
         getJobs();
         router.push({ name: 'edit-blog', params: { blog_id: response.data.id } });
     } catch (error) {
-        errorMessage(error);
+        console.log('error', error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        }
     }
 }
 

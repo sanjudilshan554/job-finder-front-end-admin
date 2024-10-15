@@ -24,6 +24,8 @@
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" role="switch"
                                                 v-model="blogData.status" id="flexSwitchCheckDefault">
+                                            <span class="text-danger" v-if="errors?.status">{{
+                                                errors.status[0] }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -32,6 +34,8 @@
                                     <label for="name">Blog Title:</label>
                                     <input v-model="blogData.title" class="form-control form-control" type="text"
                                         placeholder="Blog Title">
+                                    <span class="text-danger" v-if="errors?.title">{{
+                                        errors.title[0] }}</span>
                                 </div>
 
                                 <div class="col-4 mt-3">
@@ -41,7 +45,8 @@
                                             :searchable="false" track-by="id" label="name" :close-on-select="false"
                                             :show-labels="false" placeholder="Select Category">
                                         </multiselect>
-                                        <pre class="language-json"><code>{{ value }}</code></pre>
+                                        <span class="text-danger" v-if="errors?.category_id">{{
+                                            errors.category_id[0] }}</span>
                                     </div>
                                 </div>
 
@@ -49,20 +54,28 @@
                                     <label for="name">View Text:</label>
                                     <textarea v-model="blogData.view_text" class="form-control form-control" type="text"
                                         placeholder="View Text" />
+                                    <span class="text-danger" v-if="errors?.view_text">{{
+                                        errors.view_text[0] }}</span>
                                 </div>
                                 <div class="col-12 mt-3">
                                     <label for="name">Text:</label>
                                     <textarea v-model="blogData.text" class="form-control form-control" type="text"
                                         placeholder="Text" />
+                                    <span class="text-danger" v-if="errors?.text">{{
+                                        errors.text[0] }}</span>
                                 </div>
                                 <div class="col-12 mt-3">
                                     <label for="name">Meta tags:</label>
                                     <textarea v-model="blogData.meta_tags" class="form-control form-control" type="text"
                                         placeholder="Meta Tags" />
+                                    <span class="text-danger" v-if="errors?.meta_tags">{{
+                                        errors.meta_tags[0] }}</span>
                                 </div>
                                 <div class="mt-3">
                                     <label for="name">Image:</label>
                                     <input class="form-control form-control" type="file" placeholder=".form-control">
+                                    <span class="text-danger" v-if="errors?.image">{{
+                                        errors.image[0] }}</span>
                                 </div>
                             </div>
                             <div class="text-end mt-3">
@@ -99,8 +112,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"
                             @click.prevent="closeDeleteModal">Close</button>
-                        <button type="button" class="btn btn-danger"
-                            @click.prevent="deleteBlog()">delete</button>
+                        <button type="button" class="btn btn-danger" @click.prevent="deleteBlog()">delete</button>
                     </div>
                 </div>
             </div>
@@ -122,6 +134,7 @@ const router = useRouter();
 const blog = ref({});
 const blogs = ref([]);
 const blogData = ref({});
+const errors = ref({});
 const blog_id = ref(route.params.blog_id);
 const blogCategories = ref([]);
 
@@ -134,13 +147,14 @@ const getBlog = async () => {
         } else {
             blogData.value.status = true;
         }
-
         blogData.value.category = { id: blogData.value.category_id, name: blogData.value.category_name };
-
-        console.log('blog', response);
         $('#editJob').modal('show');
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -148,13 +162,16 @@ const updateBlog = async () => {
     try {
         blogData.value.category_id = blogData.value.category.id;
         blogData.value.category_name = blogData.value.category.name;
-        console.log('blogData.value', blogData.value);
         const response = await axios.post(`http://127.0.0.1:8000/api/blog/update/${blog_id.value}`, blogData.value);
         successMessage('Blog updated successfully');
         getBlog();
         console.log('update', response);
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -164,7 +181,11 @@ const confirmDelete = async () => {
         const response = await axios.get(`http://127.0.0.1:8000/api/blog/get/${blog_id.value}`);
         blogData.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -175,7 +196,11 @@ const deleteBlog = async (id) => {
         successMessage('Blog deleted successfully');
         router.push({ name: 'blogs' });
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -226,7 +251,11 @@ const getActivatedCategories = async () => {
         const response = await axios.get('http://127.0.0.1:8000/api/blog/category/all-enabled');
         blogCategories.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
