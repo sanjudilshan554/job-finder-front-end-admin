@@ -265,6 +265,7 @@ const errors = ref({});
 
 const createCompany = async () => {
     try {
+        clearValidationErrors();
         const response = await axios.post('http://127.0.0.1:8000/api/job/company/store', company.value);
         closeCreateModal();
         clearVariables();
@@ -302,6 +303,7 @@ const getCategories = async () => {
 
 const editCompany = async (id) => {
     try {
+        clearValidationErrors();
         const response = await axios.get(`http://127.0.0.1:8000/api/job/company/get/${id}`);
         companyData.value = response.data;
         if (companyData.value.status == 0) {
@@ -321,6 +323,7 @@ const editCompany = async (id) => {
 
 const updateCategory = async (id) => {
     try {
+        clearValidationErrors();
         const response = await axios.post(`http://127.0.0.1:8000/api/job/company/update/${id}`, companyData.value);
         $('#editCompany').modal('hide');
         successMessage('Company updated successfully');

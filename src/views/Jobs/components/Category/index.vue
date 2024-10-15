@@ -7,8 +7,8 @@
                 <h2 class="fw-bold">Job Category management</h2>
             </div>
             <div class="text-end">
-                <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
-                    data-bs-target="#createCategory" data-whatever="@mdo">
+                <button type="button" class="btn btn-primary text-end" @click.prevent="createCategoryModal"
+                    data-whatever="@mdo">
                     <i class="bi bi-plus-square"></i> Create
                 </button>
             </div>
@@ -76,22 +76,28 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
                             <input type="text" class="form-control" id="recipient-name" v-model="category.name">
+                            <span v-if="errors?.name" class="text-danger"> {{ errors.name[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Image:</label>
                             <input type="file" class="form-control" id="recipient-name">
+                            <!-- <span v-if="errors?.image" class="text-danger"> {{ errors.image[0]
+                                }}</span> -->
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Description:</label>
                             <textarea class="form-control" id="message-text" v-model="category.description"></textarea>
+                            <span v-if="errors?.description" class="text-danger"> {{ errors.description[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Status:</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch" v-model="category.status"
                                     id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox
-                                    input</label>
+                                <span v-if="errors?.status" class="text-danger"> {{ errors.status[0]
+                                    }}</span>
                             </div>
                         </div>
 
@@ -121,23 +127,29 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
                             <input type="text" class="form-control" id="recipient-name" v-model="categoryData.name">
+                            <span v-if="errors?.name" class="text-danger"> {{ errors.name[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Image:</label>
                             <input type="file" class="form-control" id="recipient-name">
+                            <!-- <span v-if="errors?.image" class="text-danger"> {{ errors.image[0]
+                                }}</span> -->
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Description:</label>
                             <textarea class="form-control" id="message-text"
                                 v-model="categoryData.description"></textarea>
+                            <span v-if="errors?.description" class="text-danger"> {{ errors.description[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Status:</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch"
                                     v-model="categoryData.status" id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox
-                                    input</label>
+                                <span v-if="errors?.status" class="text-danger"> {{ errors.status[0]
+                                    }}</span>
                             </div>
                         </div>
 
@@ -186,16 +198,22 @@ import "sweetalert2/dist/sweetalert2.min.css";
 const category = ref({});
 const categories = ref([]);
 const categoryData = ref({});
+const errors = ref({});
 
 const createCategory = async () => {
     try {
+        clearValidationErrors();
         const response = await axios.post('http://127.0.0.1:8000/api/job/category/store', category.value);
         closeCreateModal();
         clearVariables();
         successMessage('Category created successfully');
         getCategories();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -212,12 +230,17 @@ const getCategories = async () => {
         const response = await axios.get('http://127.0.0.1:8000/api/job/category/all');
         categories.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
 const editCategory = async (id) => {
     try {
+        clearValidationErrors();
         const response = await axios.get(`http://127.0.0.1:8000/api/job/category/get/${id}`);
         categoryData.value = response.data;
         if (categoryData.value.status == 0) {
@@ -227,18 +250,27 @@ const editCategory = async (id) => {
         }
         $('#editCategory').modal('show');
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
 const updateCategory = async (id) => {
     try {
+        clearValidationErrors();
         const response = await axios.post(`http://127.0.0.1:8000/api/job/category/update/${id}`, categoryData.value);
         $('#editCategory').modal('hide');
         successMessage('Category updated successfully');
         getCategories();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -248,7 +280,11 @@ const confirmDelete = async (id) => {
         const response = await axios.get(`http://127.0.0.1:8000/api/job/category/get/${id}`);
         categoryData.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -259,7 +295,11 @@ const deleteCategory = async (id) => {
         successMessage('Category deleted successfully');
         getCategories();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -308,6 +348,17 @@ const clearVariables = () => {
 const closeDeleteModal = () => {
     $('#deleteCategory').modal('hide');
 }
+
+const createCategoryModal = () => {
+    clearVariables();
+    clearValidationErrors();
+    $('#createCategory').modal('show');
+}
+
+const clearValidationErrors = () => {
+    errors.value = {};
+}
+
 onMounted(() => {
     getCategories();
 });
