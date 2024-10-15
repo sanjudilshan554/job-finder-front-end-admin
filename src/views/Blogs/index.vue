@@ -7,6 +7,9 @@
                 <h2 class="fw-bold">Blog management</h2>
             </div>
             <div class="text-end">
+                <a href="blogs/deleted-list" type="button" class="btn btn-danger text-end mr-2" data-whatever="@mdo">
+                    <i class="bi bi-trash"></i> Deleted list
+                </a>
                 <a href="blogs/category" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
                     <i class="bi bi-boxes"></i> Category
                 </a>
