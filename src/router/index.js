@@ -57,7 +57,7 @@ const router = createRouter({
     }, 
     {
       path: '/blogs/category',
-      name: 'blog-categories',
+      name: 'blog-category',
       component: BlogCategories
     }, 
     {
@@ -67,7 +67,7 @@ const router = createRouter({
     }, 
     {
       path: '/blogs/tag',
-      name: 'tag',
+      name: 'blog-tag',
       component: BlogTag
     }, 
     {

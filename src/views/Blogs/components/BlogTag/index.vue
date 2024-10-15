@@ -164,7 +164,7 @@ const createTag = async () => {
 
 const getActivatedCategories = async () => {
     try {
-        const response = await axios.get('http://127.0.0.1:8000/api/category/all-enabled');
+        const response = await axios.get('http://127.0.0.1:8000/api/blog/category/all-enabled');
         jobCategories.value = response.data;
     } catch (error) {
         errorMessage(error);

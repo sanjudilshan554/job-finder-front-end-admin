@@ -7,15 +7,18 @@
                 <h2 class="fw-bold">Blog management</h2>
             </div>
             <div class="text-end">
-                <a href="blogs/deleted-list" type="button" class="btn btn-danger text-end mr-2" data-whatever="@mdo">
+                <button @click.prevent="visitDeletedList" type="button" class="btn btn-danger text-end mr-2"
+                    data-whatever="@mdo">
                     <i class="bi bi-trash"></i> Deleted list
-                </a>
-                <a href="blogs/category" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
+                </button>
+                <button @click.prevent="visitCategory" type="button" class="btn btn-primary text-end mr-2"
+                    data-whatever="@mdo">
                     <i class="bi bi-boxes"></i> Category
-                </a>
-                <a href="blogs/tag" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
+                </button>
+                <button @click.prevent="visitTag" type="button" class="btn btn-primary text-end mr-2"
+                    data-whatever="@mdo">
                     <i class="bi bi-tags"></i> Tags
-                </a>
+                </button>
                 <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
                     data-bs-target="#createBlog" data-whatever="@mdo">
                     <i class="bi bi-plus-square"></i> Create
@@ -291,6 +294,18 @@ const closeDeleteModal = () => {
 
 const visitBlog = (id) => {
     router.push({ name: 'edit-blog', params: { blog_id: id } });
+}
+
+const visitDeletedList = () => {
+    router.push({ name: 'deleted-blog' });
+}
+
+const visitCategory = () => {
+    router.push({ name: 'blog-category' });
+}
+
+const visitTag = () => {
+    router.push({ name: 'blog-tag' });
 }
 
 onMounted(() => {

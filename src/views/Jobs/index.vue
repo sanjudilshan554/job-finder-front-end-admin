@@ -7,15 +7,15 @@
                 <h2 class="fw-bold">Job management</h2>
             </div>
             <div class="text-end">
-                <a href="jobs/deleted-list" type="button" class="btn btn-danger text-end mr-2" data-whatever="@mdo">
+                <button @click.prevent="visitDeletedList" type="button" class="btn btn-danger text-end mr-2" data-whatever="@mdo">
                     <i class="bi bi-trash"></i> Deleted list
-                </a>
-                <a href="jobs/company" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
+                </button>
+                <button @click.prevent="visitCompany" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
                     <i class="bi bi-buildings"></i> Company
-                </a>
-                <a href="jobs/category" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
+                </button>
+                <button @click.prevent="visitCategory" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
                     <i class="bi bi-boxes"></i> Category
-                </a>
+                </button>
                 <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
                     data-bs-target="#createJob" data-whatever="@mdo">
                     <i class="bi bi-plus-square"></i>  Create
@@ -334,6 +334,18 @@ const errorMessage = (title) => {
         title: title
     });
 };
+
+const visitDeletedList = () => {
+    router.push({ name: 'deleted-job'});
+}
+
+const visitCategory = () => {
+    router.push({ name: 'job-category'});
+}
+
+const visitCompany = () => {
+    router.push({ name: 'job-company'});
+}
 
 const clearVariables = () => {
     job.value = {};
