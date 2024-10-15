@@ -8,9 +8,9 @@
                 <h2 class="fw-bold">Blog Tag management</h2>
             </div>
             <div class="text-end">
-                <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
-                    data-bs-target="#createTag" data-whatever="@mdo">
-                    <i class="bi bi-plus-square"></i>   Create
+                <button type="button" class="btn btn-primary text-end" @click.prevent="createTagModal"
+                    data-whatever="@mdo">
+                    <i class="bi bi-plus-square"></i> Create
                 </button>
             </div>
         </div>
@@ -25,9 +25,9 @@
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
-                                    <tr> 
+                                    <tr>
                                         <th>name</th>
-                                        <th>slug</th> 
+                                        <th>slug</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -35,8 +35,8 @@
                                         <td>{{ tag.name }}</td>
                                         <td>{{ tag.slug }}</td>
                                         <td class="d-flex">
-                                            <div class="" @click.prevent="editTag(tag.id)"><i
-                                                    class="bi bi-pencil"></i></div>
+                                            <div class="" @click.prevent="editTag(tag.id)"><i class="bi bi-pencil"></i>
+                                            </div>
                                             <div class="" @click.prevent="confirmDelete(tag.id)"><i
                                                     class="bi bi-trash ps-2 text-danger"></i></div>
                                         </td>
@@ -66,6 +66,8 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
                             <input type="text" class="form-control" id="recipient-name" v-model="tag.name">
+                            <span class="text-danger" v-if="errors?.name">{{
+                                errors.name[0] }}</span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -93,6 +95,8 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
                             <input type="text" class="form-control" id="recipient-name" v-model="tagData.name">
+                            <span class="text-danger" v-if="errors?.name">{{
+                                errors.name[0] }}</span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -130,7 +134,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
@@ -142,23 +146,22 @@ const tag = ref({});
 const jobs = ref([]);
 const tagData = ref({});
 const jobCategories = ref([]);
-
-const jobTypes = [
-    {id:1, name:'Full Time'},
-    {id:2, name:'Part Time'},
-    {id:3, name:'Remote'},
-    {id:4, name:'Freelance'}, 
-];
+const errors = ref({});
 
 const createTag = async () => {
     try {
+        clearValidationErrors();
         const response = await axios.post('http://127.0.0.1:8000/api/blog/tag/store', tag.value);
         closeCreateModal();
         clearVariables();
         successMessage('Job created successfully');
         getTags();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -167,7 +170,11 @@ const getActivatedCategories = async () => {
         const response = await axios.get('http://127.0.0.1:8000/api/blog/category/all-enabled');
         jobCategories.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -184,7 +191,11 @@ const getTags = async () => {
         const response = await axios.get('http://127.0.0.1:8000/api/blog/tag/all');
         jobs.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -194,18 +205,27 @@ const editTag = async (id) => {
         tagData.value = response.data;
         $('#editTag').modal('show');
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
 const updateTag = async (id) => {
     try {
+        clearValidationErrors();
         const response = await axios.post(`http://127.0.0.1:8000/api/blog/tag/update/${id}`, tagData.value);
         $('#editTag').modal('hide');
         successMessage('Job updated successfully');
         getTags();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -215,7 +235,11 @@ const confirmDelete = async (id) => {
         const response = await axios.get(`http://127.0.0.1:8000/api/blog/tag/get/${id}`);
         tagData.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -226,7 +250,11 @@ const deleteJob = async (id) => {
         successMessage('Job deleted successfully');
         getTags();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -276,8 +304,14 @@ const closeDeleteModal = () => {
     $('#deleteJob').modal('hide');
 }
 
-const visitJob = (id) => {
-    router.push({ name: 'edit-tag', params: { job_id: id } });
+const createTagModal = () => {
+    clearVariables();
+    clearValidationErrors();
+    $('#createTag').modal('show');
+}
+
+const clearValidationErrors = () => {
+    errors.value = {};
 }
 
 onMounted(() => {

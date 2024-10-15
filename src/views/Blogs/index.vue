@@ -197,9 +197,14 @@ const createBlog = async () => {
         getJobs();
         router.push({ name: 'edit-blog', params: { blog_id: response.data.id } });
     } catch (error) {
-        console.log('error', error);
         if (error.response.status === 422) {
             errors.value = error.response.data.errors
+        } else {
+            if (error.response.status === 422) {
+                errors.value = error.response.data.errors
+            } else {
+                errorMessage(error);
+            }
         }
     }
 }
@@ -209,7 +214,11 @@ const getActivatedCategories = async () => {
         const response = await axios.get('http://127.0.0.1:8000/api/blog/category/all-enabled');
         blogCategories.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -226,7 +235,11 @@ const getJobs = async () => {
         const response = await axios.get('http://127.0.0.1:8000/api/blog/all');
         blogs.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -237,7 +250,11 @@ const updateJob = async (id) => {
         successMessage('Blog updated successfully');
         getJobs();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -248,7 +265,11 @@ const deleteJob = async (id) => {
         successMessage('Blog deleted successfully');
         getJobs();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 

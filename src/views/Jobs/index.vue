@@ -7,18 +7,20 @@
                 <h2 class="fw-bold">Job management</h2>
             </div>
             <div class="text-end">
-                <button @click.prevent="visitDeletedList" type="button" class="btn btn-danger text-end mr-2" data-whatever="@mdo">
+                <button @click.prevent="visitDeletedList" type="button" class="btn btn-danger text-end mr-2"
+                    data-whatever="@mdo">
                     <i class="bi bi-trash"></i> Deleted list
                 </button>
-                <button @click.prevent="visitCompany" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
+                <button @click.prevent="visitCompany" type="button" class="btn btn-primary text-end mr-2"
+                    data-whatever="@mdo">
                     <i class="bi bi-buildings"></i> Company
                 </button>
-                <button @click.prevent="visitCategory" type="button" class="btn btn-primary text-end mr-2" data-whatever="@mdo">
+                <button @click.prevent="visitCategory" type="button" class="btn btn-primary text-end mr-2"
+                    data-whatever="@mdo">
                     <i class="bi bi-boxes"></i> Category
                 </button>
-                <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
-                    data-bs-target="#createJob" data-whatever="@mdo">
-                    <i class="bi bi-plus-square"></i>  Create
+                <button type="button" class="btn btn-primary text-end" @click.prevent="createJobModal"  data-whatever="@mdo">
+                    <i class="bi bi-plus-square"></i> Create
                 </button>
             </div>
         </div>
@@ -84,6 +86,7 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
                             <input type="text" class="form-control" id="recipient-name" v-model="job.name">
+                            <span v-if="errors?.name" class="text-danger"> {{ errors.name[0] }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Job Category:</label>
@@ -92,17 +95,18 @@
                                     track-by="id" label="name" :close-on-select="false" :show-labels="false"
                                     placeholder="Select Category">
                                 </multiselect>
+                                <span v-if="errors?.category_id" class="text-danger"> {{ errors.category_id[0] }}</span>
                                 <pre class="language-json"><code>{{ value }}</code></pre>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Job Type:</label>
                             <div>
-                                <multiselect v-model="job.type" :options="jobTypes" :searchable="false"
-                                    label="name" track-by="id"
-                                    :close-on-select="false" :show-labels="false" placeholder="Select Job">
+                                <multiselect v-model="job.type" :options="jobTypes" :searchable="false" label="name"
+                                    track-by="id" :close-on-select="false" :show-labels="false"
+                                    placeholder="Select Job">
                                 </multiselect>
-                                <pre class="language-json"><code>{{ value }}</code></pre>
+                                <span v-if="errors?.type_id" class="text-danger"> {{ errors.type_id[0] }}</span>
                             </div>
                         </div>
                     </div>
@@ -186,7 +190,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
@@ -198,29 +202,40 @@ const job = ref({});
 const jobs = ref([]);
 const jobData = ref({});
 const jobCategories = ref([]);
+const errors = ref({});
 
 const jobTypes = [
-    {id:1, name:'Full Time'},
-    {id:2, name:'Part Time'},
-    {id:3, name:'Remote'},
-    {id:4, name:'Freelance'}, 
+    { id: 1, name: 'Full Time' },
+    { id: 2, name: 'Part Time' },
+    { id: 3, name: 'Remote' },
+    { id: 4, name: 'Freelance' },
 ];
 
 const createJob = async () => {
     try {
-        job.value.category_id = job.value.category.id;
-        job.value.category_name = job.value.category.name;
-        job.value.type_id = job.value.type.id;
-        job.value.type_name = job.value.type.name;
-        
+        clearValidationErrors();
+        if (job.value.category?.id) {
+            job.value.category_id = job.value.category.id;
+            job.value.category_name = job.value.category.name;
+        }
+
+        if (job.value.type?.id) {
+            job.value.type_id = job.value.type.id;
+            job.value.type_name = job.value.type.name;
+        }
+
         const response = await axios.post('http://127.0.0.1:8000/api/job/store', job.value);
         closeCreateModal();
         clearVariables();
         successMessage('Job created successfully');
         getJobs();
         router.push({ name: 'edit-job', params: { job_id: response.data.id } });
-    } catch (error) {
-        errorMessage(error);
+    } catch (error) { 
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -229,7 +244,11 @@ const getActivatedCategories = async () => {
         const response = await axios.get('http://127.0.0.1:8000/api/job/category/all-enabled');
         jobCategories.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -246,43 +265,27 @@ const getJobs = async () => {
         const response = await axios.get('http://127.0.0.1:8000/api/job/all');
         jobs.value = response.data;
     } catch (error) {
-        errorMessage(error);
-    }
-}
-
-const editJob = async (id) => {
-    try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/job/get/${id}`);
-        jobData.value = response.data;
-        if (jobData.value.status == 0) {
-            jobData.value.status = false;
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
         } else {
-            jobData.value.status = true;
+            errorMessage(error);
         }
-        $('#editJob').modal('show');
-    } catch (error) {
-        errorMessage(error);
     }
 }
 
 const updateJob = async (id) => {
     try {
+        clearValidationErrors();
         const response = await axios.post(`http://127.0.0.1:8000/api/job/update/${id}`, jobData.value);
         $('#editJob').modal('hide');
         successMessage('Job updated successfully');
         getJobs();
     } catch (error) {
-        errorMessage(error);
-    }
-}
-
-const confirmDelete = async (id) => {
-    try {
-        $('#deleteJob').modal('show');
-        const response = await axios.get(`http://127.0.0.1:8000/api/job/get/${id}`);
-        jobData.value = response.data;
-    } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -293,7 +296,11 @@ const deleteJob = async (id) => {
         successMessage('Job deleted successfully');
         getJobs();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -336,15 +343,15 @@ const errorMessage = (title) => {
 };
 
 const visitDeletedList = () => {
-    router.push({ name: 'deleted-job'});
+    router.push({ name: 'deleted-job' });
 }
 
 const visitCategory = () => {
-    router.push({ name: 'job-category'});
+    router.push({ name: 'job-category' });
 }
 
 const visitCompany = () => {
-    router.push({ name: 'job-company'});
+    router.push({ name: 'job-company' });
 }
 
 const clearVariables = () => {
@@ -357,6 +364,16 @@ const closeDeleteModal = () => {
 
 const visitJob = (id) => {
     router.push({ name: 'edit-job', params: { job_id: id } });
+}
+
+const clearValidationErrors = () => {
+    errors.value = {};
+}
+
+const createJobModal = () => {
+    clearVariables();
+    clearValidationErrors();
+    $('#createJob').modal('show');
 }
 
 onMounted(() => {

@@ -7,8 +7,8 @@
                 <h2 class="fw-bold">Job Company management</h2>
             </div>
             <div class="text-end">
-                <button type="button" class="btn btn-primary text-end" data-bs-toggle="modal"
-                    data-bs-target="#createCompany" data-whatever="@mdo">
+                <button type="button" class="btn btn-primary text-end" @click.prevent="createCompanyModal"
+                    data-whatever="@mdo">
                     <i class="bi bi-plus-square"></i> Create
                 </button>
             </div>
@@ -83,42 +83,56 @@
                             <label for="recipient-name" class="col-form-label">Name:</label>
                             <input type="text" class="form-control" id="recipient-name" placeholder="Company Name"
                                 v-model="company.name">
+                            <span v-if="errors?.name" class="text-danger"> {{ errors.name[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Web Address:</label>
                             <input type="text" class="form-control" id="recipient-name" placeholder="Web Address"
                                 v-model="company.web_address">
+                            <span v-if="errors?.web_address" class="text-danger"> {{ errors.web_address[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Email:</label>
                             <input type="text" v-model="company.email" class="form-control" id="recipient-name"
                                 placeholder="Email Address">
+                            <span v-if="errors?.email" class="text-danger"> {{ errors.email[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Location:</label>
                             <input type="text" v-model="company.location" class="form-control" id="recipient-name"
                                 placeholder="Location">
+                            <span v-if="errors?.location" class="text-danger"> {{ errors.location[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Address:</label>
                             <input type="text" v-model="company.address" class="form-control" id="recipient-name"
                                 placeholder="Address">
+                            <span v-if="errors?.address" class="text-danger"> {{ errors.address[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Description:</label>
                             <textarea class="form-control" id="message-text" v-model="company.description"></textarea>
+                            <span v-if="errors?.description" class="text-danger"> {{ errors.description[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Image:</label>
                             <input type="file" class="form-control" id="recipient-name" placeholder="Image">
+                            <!-- <span v-if="errors?.image" class="text-danger"> {{ errors.image[0]
+                                        }}</span> -->
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Status:</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch" v-model="company.status"
                                     id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox
-                                    input</label>
+                                <span v-if="errors?.status" class="text-danger"> {{ errors.status[0]
+                                    }}</span>
                             </div>
                         </div>
 
@@ -148,43 +162,57 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
                             <input type="text" class="form-control" id="recipient-name" v-model="companyData.name">
+                            <span v-if="errors?.name" class="text-danger"> {{ errors.name[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Web Address:</label>
                             <input type="text" class="form-control" id="recipient-name" placeholder="Web Address"
                                 v-model="companyData.web_address">
+                            <span v-if="errors?.web_address" class="text-danger"> {{ errors.web_address[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Email:</label>
-                            <input type="text" v-model="companyData.email" class="form-control" id="recipient-name"
+                            <input type="email" v-model="companyData.email" class="form-control" id="recipient-name"
                                 placeholder="Email Address">
+                            <span v-if="errors?.email" class="text-danger"> {{ errors.email[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Location:</label>
                             <input type="text" v-model="companyData.location" class="form-control" id="recipient-name"
                                 placeholder="Location">
+                            <span v-if="errors?.location" class="text-danger"> {{ errors.location[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Address:</label>
                             <input type="text" v-model="companyData.address" class="form-control" id="recipient-name"
                                 placeholder="Address">
+                            <span v-if="errors?.address" class="text-danger"> {{ errors.address[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Description:</label>
                             <textarea class="form-control" id="message-text"
                                 v-model="companyData.description"></textarea>
+                            <span v-if="errors?.description" class="text-danger"> {{ errors.description[0]
+                                }}</span>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Image:</label>
                             <input type="file" class="form-control" id="recipient-name">
+                            <!-- <span v-if="errors?.image" class="text-danger"> {{ errors.image[0]
+                                }}</span> -->
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Status:</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch"
                                     v-model="companyData.status" id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox
-                                    input</label>
+                                <span v-if="errors?.status" class="text-danger"> {{ errors.status[0]
+                                    }}</span>
                             </div>
                         </div>
 
@@ -233,6 +261,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 const company = ref({});
 const companies = ref([]);
 const companyData = ref({});
+const errors = ref({});
 
 const createCompany = async () => {
     try {
@@ -242,7 +271,11 @@ const createCompany = async () => {
         successMessage('Company created successfully');
         getCategories();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -259,7 +292,11 @@ const getCategories = async () => {
         const response = await axios.get('http://127.0.0.1:8000/api/job/company/all');
         companies.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -274,7 +311,11 @@ const editCompany = async (id) => {
         }
         $('#editCompany').modal('show');
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -285,7 +326,11 @@ const updateCategory = async (id) => {
         successMessage('Company updated successfully');
         getCategories();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -295,7 +340,11 @@ const confirmDelete = async (id) => {
         const response = await axios.get(`http://127.0.0.1:8000/api/job/company/get/${id}`);
         companyData.value = response.data;
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -306,7 +355,11 @@ const deleteCompany = async (id) => {
         successMessage('Company deleted successfully');
         getCategories();
     } catch (error) {
-        errorMessage(error);
+        if (error.response.status === 422) {
+            errors.value = error.response.data.errors
+        } else {
+            errorMessage(error);
+        }
     }
 }
 
@@ -355,6 +408,17 @@ const clearVariables = () => {
 const closeDeleteModal = () => {
     $('#deleteCompany').modal('hide');
 }
+
+const clearValidationErrors = () => {
+    errors.value = {};
+}
+
+const createCompanyModal = () => {
+    clearVariables();
+    clearValidationErrors();
+    $('#createCompany').modal('show');
+}
+
 onMounted(() => {
     getCategories();
 });

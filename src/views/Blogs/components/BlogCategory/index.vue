@@ -321,6 +321,7 @@ const createCategoryModal = () => {
 const clearValidationErrors = () => {
     errors.value = {};
 }
+
 onMounted(() => {
     getCategories();
 });
