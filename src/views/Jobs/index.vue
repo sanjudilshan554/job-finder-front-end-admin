@@ -19,7 +19,8 @@
                     data-whatever="@mdo">
                     <i class="bi bi-boxes"></i> Category
                 </button>
-                <button type="button" class="btn btn-primary text-end" @click.prevent="createJobModal"  data-whatever="@mdo">
+                <button type="button" class="btn btn-primary text-end" @click.prevent="createJobModal"
+                    data-whatever="@mdo">
                     <i class="bi bi-plus-square"></i> Create
                 </button>
             </div>
@@ -62,7 +63,50 @@
                                         <td>{{ job.image_id }}</td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table> 
+
+                            <!-- Pagination -->
+                            <div v-if="jobs.length > 0" class="row my-3 ps-1 ps-md-0">
+
+                                <div class="col-sm-6">
+                                    <div for="purchase_uom" class="col-form-label text-gray-600">
+                                        Showing {{ pagination.from }} to
+                                        {{ pagination.to }} of
+                                        {{ pagination.total }} entries
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 d-flex justify-content-end">
+                                    <div class="dataTables_paginate paging_simple_numbers"
+                                        id="kt_ecommerce_sales_table_paginate">
+                                        <ul class="pagination">
+                                            <li class="paginate_button page-item previous"
+                                                :class="pagination.current_page == 1 ? 'disabled' : ''"
+                                                id="kt_ecommerce_sales_table_previous"><a href="javascript:void(0)"
+                                                    @click="setPage(pagination.current_page - 1)"
+                                                    aria-controls="kt_ecommerce_sales_table" data-dt-idx="0"
+                                                    tabindex="0" class="page-link"><i class="previous"></i></a></li>
+                                            <template v-for="(page, index) in pagination.last_page">
+                                                <template
+                                                    v-if="page == 1 || page == pagination.last_page || Math.abs(page - pagination.current_page) < 5">
+                                                    <li class="paginate_button page-item" :key="index"
+                                                        :class="pagination.current_page == page ? 'active' : ''"><a
+                                                            href="javascript:void(0)" @click="setPage(page)"
+                                                            aria-controls="kt_ecommerce_sales_table" data-dt-idx="1"
+                                                            tabindex="0" class="page-link">{{ page }}</a></li>
+                                                </template>
+                                            </template>
+                                            <li class="paginate_button page-item next"
+                                                :class="pagination.current_page == pagination.last_page ? 'disabled' : ''"
+                                                id="kt_ecommerce_sales_table_next"><a href="javascript:void(0)"
+                                                    @click="setPage(pagination.current_page + 1)"
+                                                    aria-controls="kt_ecommerce_sales_table" data-dt-idx="6"
+                                                    tabindex="0" class="page-link"><i class="next"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -203,6 +247,19 @@ const jobs = ref([]);
 const jobData = ref({});
 const jobCategories = ref([]);
 const errors = ref({});
+const meta = ref(null);
+
+
+const page = ref(1);
+const perPage = ref(2);
+const pageCount = ref(25);
+const pagination = ref({});
+
+const setPage = async (new_page) => {
+    page.value = new_page;
+    const url = `http://127.0.0.1:8000/api/job/all?page=${new_page}&per_page=${perPage.value}`;
+    await getJobs(url);
+};
 
 const jobTypes = [
     { id: 1, name: 'Full Time' },
@@ -230,7 +287,7 @@ const createJob = async () => {
         successMessage('Job created successfully');
         getJobs();
         router.push({ name: 'edit-job', params: { job_id: response.data.id } });
-    } catch (error) { 
+    } catch (error) {
         if (error.response.status === 422) {
             errors.value = error.response.data.errors
         } else {
@@ -243,6 +300,7 @@ const getActivatedCategories = async () => {
     try {
         const response = await axios.get('http://127.0.0.1:8000/api/job/category/all-enabled');
         jobCategories.value = response.data;
+
     } catch (error) {
         if (error.response.status === 422) {
             errors.value = error.response.data.errors
@@ -260,18 +318,21 @@ const closeEditModal = () => {
     $('#editJob').modal('hide');
 }
 
-const getJobs = async () => {
+// Fetch jobs dynamically based on the URL
+const getJobs = async (url = `http://127.0.0.1:8000/api/job/all?page=1&per_page=${perPage.value}`) => {
     try {
-        const response = await axios.get('http://127.0.0.1:8000/api/job/all');
-        jobs.value = response.data;
+        const response = await axios.get(url);
+        jobs.value = response.data.data; // Jobs data
+        pagination.value = response.data.meta;
+        console.log('hello', response);
     } catch (error) {
-        if (error.response.status === 422) {
-            errors.value = error.response.data.errors
+        if (error.response && error.response.status === 422) {
+            errors.value = error.response.data.errors;
         } else {
-            errorMessage(error);
+            console.error(error);
         }
     }
-}
+};
 
 const updateJob = async (id) => {
     try {
@@ -381,3 +442,5 @@ onMounted(() => {
     getActivatedCategories();
 });
 </script>
+
+<style></style>
