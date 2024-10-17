@@ -248,8 +248,8 @@ const jobData = ref({});
 const jobCategories = ref([]);
 const errors = ref({});
 
-const page = ref(10);
-const perPage = ref(2);
+const page = ref(1);
+const perPage = ref(10);
 const pageCount = ref(25);
 const pagination = ref({});
 
@@ -319,7 +319,7 @@ const closeEditModal = () => {
 const getJobs = async (url = `http://127.0.0.1:8000/api/job/all?page=1&per_page=${perPage.value}`) => {
     try {
         const response = await axios.get(url);
-        jobs.value = response.data.data; // Jobs data
+        jobs.value = response.data.data; 
         pagination.value = response.data.meta;
         console.log('hello', response);
     } catch (error) {

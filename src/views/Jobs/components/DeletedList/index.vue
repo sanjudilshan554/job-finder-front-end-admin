@@ -50,6 +50,48 @@
                                     </tr>
                                 </tbody>
                             </table>
+
+                            <!-- Pagination -->
+                            <div v-if="deletedJobs.length > 0" class="row my-3 ps-1 ps-md-0">
+
+                                <div class="col-sm-6">
+                                    <div for="purchase_uom" class="col-form-label text-gray-600">
+                                        Showing {{ pagination.from }} to
+                                        {{ pagination.to }} of
+                                        {{ pagination.total }} entries
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 d-flex justify-content-end">
+                                    <div class="dataTables_paginate paging_simple_numbers"
+                                        id="kt_ecommerce_sales_table_paginate">
+                                        <ul class="pagination">
+                                            <li class="paginate_button page-item previous"
+                                                :class="pagination.current_page == 1 ? 'disabled' : ''"
+                                                id="kt_ecommerce_sales_table_previous"><a href="javascript:void(0)"
+                                                    @click="setPage(pagination.current_page - 1)"
+                                                    aria-controls="kt_ecommerce_sales_table" data-dt-idx="0"
+                                                    tabindex="0" class="page-link"><i class="previous"></i></a></li>
+                                            <template v-for="(page, index) in pagination.last_page">
+                                                <template
+                                                    v-if="page == 1 || page == pagination.last_page || Math.abs(page - pagination.current_page) < 5">
+                                                    <li class="paginate_button page-item" :key="index"
+                                                        :class="pagination.current_page == page ? 'active' : ''"><a
+                                                            href="javascript:void(0)" @click="setPage(page)"
+                                                            aria-controls="kt_ecommerce_sales_table" data-dt-idx="1"
+                                                            tabindex="0" class="page-link">{{ page }}</a></li>
+                                                </template>
+                                            </template>
+                                            <li class="paginate_button page-item next"
+                                                :class="pagination.current_page == pagination.last_page ? 'disabled' : ''"
+                                                id="kt_ecommerce_sales_table_next"><a href="javascript:void(0)"
+                                                    @click="setPage(pagination.current_page + 1)"
+                                                    aria-controls="kt_ecommerce_sales_table" data-dt-idx="6"
+                                                    tabindex="0" class="page-link"><i class="next"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -75,8 +117,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
                         @click.prevent="closeRecoveryModal">Close</button>
-                    <button type="button" class="btn btn-danger"
-                        @click.prevent="recoveryJob()">recovery</button>
+                    <button type="button" class="btn btn-danger" @click.prevent="recoveryJob()">recovery</button>
                 </div>
             </div>
         </div>
@@ -89,22 +130,25 @@ import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
-const deletedList = ref({});
 const deletedJobs = ref({});
 const deletedJobId = ref(0);
 
-const closeCreateModal = () => {
-    $('#createCategory').modal('hide');
-}
+const page = ref(1);
+const perPage = ref(10);
+const pageCount = ref(25);
+const pagination = ref({});
 
-const closeEditModal = () => {
-    $('#getJob').modal('hide');
-}
+const setPage = async (new_page) => {
+    page.value = new_page;
+    const url = `http://127.0.0.1:8000/api/job/all?page=${new_page}&per_page=${perPage.value}`;
+    await getDeletedList(url);
+}; 
 
-const getDeletedList = async () => {
-    try {
-        const response = await axios.get('http://127.0.0.1:8000/api/job/deleted/all');
-        deletedJobs.value = response.data;
+const getDeletedList = async (url = `http://127.0.0.1:8000/api/job/deleted/all?page=1&per_page=${perPage.value}`) => {
+    try { 
+        const response = await axios.get(url);
+        deletedJobs.value = response.data.data;
+        pagination.value = response.data.meta;
     } catch (error) {
         errorMessage(error);
     }
@@ -114,7 +158,6 @@ const confirmRecovery = async (id) => {
     try {
         $('#recoveryJob').modal('show');
         const response = await axios.get(`http://127.0.0.1:8000/api/job/deleted/get/${id}`);
-        console.log('response',response);
         deletedJobId.value = response.data.id;
     } catch (error) {
         errorMessage(error);
