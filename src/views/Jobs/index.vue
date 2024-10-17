@@ -247,10 +247,8 @@ const jobs = ref([]);
 const jobData = ref({});
 const jobCategories = ref([]);
 const errors = ref({});
-const meta = ref(null);
 
-
-const page = ref(1);
+const page = ref(10);
 const perPage = ref(2);
 const pageCount = ref(25);
 const pagination = ref({});
@@ -318,7 +316,6 @@ const closeEditModal = () => {
     $('#editJob').modal('hide');
 }
 
-// Fetch jobs dynamically based on the URL
 const getJobs = async (url = `http://127.0.0.1:8000/api/job/all?page=1&per_page=${perPage.value}`) => {
     try {
         const response = await axios.get(url);
