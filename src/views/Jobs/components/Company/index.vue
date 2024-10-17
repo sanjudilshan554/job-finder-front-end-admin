@@ -18,8 +18,8 @@
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Job / Companies</h4>
+                    <div class="card-body"> 
+                        <h4 class="card-title"> <span class="cursor-pointer" @click.prevent="visitJob">Job </span> / Companies</h4>
                         <h6 class="card-subtitle">Add class <code>.table</code></h6>
                         <div class="table-responsive">
                             <table class="table">
@@ -299,7 +299,9 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const company = ref({});
 const companies = ref([]);
 const companyData = ref({});
@@ -475,6 +477,10 @@ const createCompanyModal = () => {
     clearVariables();
     clearValidationErrors();
     $('#createCompany').modal('show');
+}
+
+const visitJob = () => {
+    router.push({ name: 'jobs' });
 }
 
 onMounted(() => {

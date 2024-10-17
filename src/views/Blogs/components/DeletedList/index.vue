@@ -12,8 +12,8 @@
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Blogs / Deleted-list</h4>
+                    <div class="card-body"> 
+                        <h4 class="card-title"> <span class="cursor-pointer" @click.prevent="visitBlog">Blog </span> / Deleted-list</h4>
                         <h6 class="card-subtitle">Add class <code>.table</code></h6>
                         <div class="table-responsive">
                             <table class="table">
@@ -123,7 +123,9 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const deletedBlogs = ref({});
 const deletedBlogId = ref(0);
 const errors = ref({});
@@ -216,6 +218,10 @@ const errorMessage = (title) => {
 
 const closeRecoveryModal = () => {
     $('#recoveryBlog').modal('hide');
+}
+
+const visitBlog = () => {
+    router.push({ name: 'blogs' });
 }
 
 onMounted(() => {

@@ -19,8 +19,8 @@
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Blog / Tags</h4>
+                    <div class="card-body"> 
+                        <h4 class="card-title"> <span class="cursor-pointer" @click.prevent="visitBlog">Blog </span> / Tags</h4>
                         <h6 class="card-subtitle">Add class <code>.table</code></h6>
                         <div class="table-responsive">
                             <table class="table">
@@ -355,6 +355,10 @@ const createTagModal = () => {
 
 const clearValidationErrors = () => {
     errors.value = {};
+}
+
+const visitBlog = () => {
+    router.push({ name: 'blogs' });
 }
 
 onMounted(() => {

@@ -13,7 +13,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Jobs / Deleted-list</h4>
+                        <h4 class="card-title"> <span class="cursor-pointer" @click.prevent="visitJob">Job </span> /
+                            Deleted-list</h4>
                         <h6 class="card-subtitle">Add class <code>.table</code></h6>
                         <div class="table-responsive">
                             <table class="table">
@@ -29,8 +30,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="deletedJob in deletedJobs" class="cursor-pointer"
-                                        @click.prevent="visitJob(job.id)">
+                                    <tr v-for="deletedJob in deletedJobs" class="cursor-pointer">
                                         <td>
                                             <span v-if="deletedJob.status == 1"
                                                 class="badge badge-success">Published</span>
@@ -129,7 +129,9 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios'
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const deletedJobs = ref({});
 const deletedJobId = ref(0);
 
@@ -142,10 +144,10 @@ const setPage = async (new_page) => {
     page.value = new_page;
     const url = `http://127.0.0.1:8000/api/job/all?page=${new_page}&per_page=${perPage.value}`;
     await getDeletedList(url);
-}; 
+};
 
 const getDeletedList = async (url = `http://127.0.0.1:8000/api/job/deleted/all?page=1&per_page=${perPage.value}`) => {
-    try { 
+    try {
         const response = await axios.get(url);
         deletedJobs.value = response.data.data;
         pagination.value = response.data.meta;
@@ -215,6 +217,10 @@ const errorMessage = (title) => {
 
 const closeRecoveryModal = () => {
     $('#recoveryJob').modal('hide');
+}
+
+const visitJob = () => {
+    router.push({ name: 'jobs' });
 }
 
 onMounted(() => {
