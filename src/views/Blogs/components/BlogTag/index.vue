@@ -31,7 +31,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="tag in jobs" class="cursor-pointer">
+                                    <tr v-for="tag in blogTag" class="cursor-pointer">
                                         <td>{{ tag.name }}</td>
                                         <td>{{ tag.slug }}</td>
                                         <td class="d-flex">
@@ -43,6 +43,49 @@
                                     </tr>
                                 </tbody>
                             </table>
+
+                            <!-- Pagination -->
+                            <div v-if="blogTag.length > 0" class="row my-3 ps-1 ps-md-0">
+
+                                <div class="col-sm-6">
+                                    <div for="purchase_uom" class="col-form-label text-gray-600">
+                                        Showing {{ pagination.from }} to
+                                        {{ pagination.to }} of
+                                        {{ pagination.total }} entries
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 d-flex justify-content-end">
+                                    <div class="dataTables_paginate paging_simple_numbers"
+                                        id="kt_ecommerce_sales_table_paginate">
+                                        <ul class="pagination">
+                                            <li class="paginate_button page-item previous"
+                                                :class="pagination.current_page == 1 ? 'disabled' : ''"
+                                                id="kt_ecommerce_sales_table_previous"><a href="javascript:void(0)"
+                                                    @click="setPage(pagination.current_page - 1)"
+                                                    aria-controls="kt_ecommerce_sales_table" data-dt-idx="0"
+                                                    tabindex="0" class="page-link"><i class="previous"></i></a></li>
+                                            <template v-for="(page, index) in pagination.last_page">
+                                                <template
+                                                    v-if="page == 1 || page == pagination.last_page || Math.abs(page - pagination.current_page) < 5">
+                                                    <li class="paginate_button page-item" :key="index"
+                                                        :class="pagination.current_page == page ? 'active' : ''"><a
+                                                            href="javascript:void(0)" @click="setPage(page)"
+                                                            aria-controls="kt_ecommerce_sales_table" data-dt-idx="1"
+                                                            tabindex="0" class="page-link">{{ page }}</a></li>
+                                                </template>
+                                            </template>
+                                            <li class="paginate_button page-item next"
+                                                :class="pagination.current_page == pagination.last_page ? 'disabled' : ''"
+                                                id="kt_ecommerce_sales_table_next"><a href="javascript:void(0)"
+                                                    @click="setPage(pagination.current_page + 1)"
+                                                    aria-controls="kt_ecommerce_sales_table" data-dt-idx="6"
+                                                    tabindex="0" class="page-link"><i class="next"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -143,10 +186,36 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const tag = ref({});
-const jobs = ref([]);
+const blogTag = ref([]);
 const tagData = ref({});
 const jobCategories = ref([]);
 const errors = ref({});
+
+const page = ref(1);
+const perPage = ref(10);
+const pageCount = ref(25);
+const pagination = ref({});
+
+const setPage = async (new_page) => {
+    page.value = new_page;
+    const url = `http://127.0.0.1:8000/api/blog/tag/all?page=${new_page}&per_page=${perPage.value}`;
+    await getCategories(url);
+};
+
+const getTags = async (url = `http://127.0.0.1:8000/api/blog/tag/all?page=1&per_page=${perPage.value}`) => {
+    try {
+        const response = await axios.get(url);
+        blogTag.value = response.data.data;
+        pagination.value = response.data.meta;
+        console.log('hello', blogTag.value);
+    } catch (error) {
+        if (error.response && error.response.status === 422) {
+            errors.value = error.response.data.errors;
+        } else {
+            console.error(error);
+        }
+    }
+};
 
 const createTag = async () => {
     try {
@@ -163,20 +232,7 @@ const createTag = async () => {
             errorMessage(error);
         }
     }
-}
-
-const getActivatedCategories = async () => {
-    try {
-        const response = await axios.get('http://127.0.0.1:8000/api/blog/category/all-enabled');
-        jobCategories.value = response.data;
-    } catch (error) {
-        if (error.response.status === 422) {
-            errors.value = error.response.data.errors
-        } else {
-            errorMessage(error);
-        }
-    }
-}
+} 
 
 const closeCreateModal = () => {
     $('#createTag').modal('hide');
@@ -184,19 +240,6 @@ const closeCreateModal = () => {
 
 const closeEditModal = () => {
     $('#editTag').modal('hide');
-}
-
-const getTags = async () => {
-    try {
-        const response = await axios.get('http://127.0.0.1:8000/api/blog/tag/all');
-        jobs.value = response.data;
-    } catch (error) {
-        if (error.response.status === 422) {
-            errors.value = error.response.data.errors
-        } else {
-            errorMessage(error);
-        }
-    }
 }
 
 const editTag = async (id) => {
@@ -315,7 +358,6 @@ const clearValidationErrors = () => {
 }
 
 onMounted(() => {
-    getTags();
-    getActivatedCategories();
+    getTags(); 
 });
 </script>

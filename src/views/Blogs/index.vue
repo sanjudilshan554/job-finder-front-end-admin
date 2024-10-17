@@ -54,6 +54,48 @@
                                     </tr>
                                 </tbody>
                             </table>
+
+                            <!-- Pagination -->
+                            <div v-if="blogs.length > 0" class="row my-3 ps-1 ps-md-0">
+
+                                <div class="col-sm-6">
+                                    <div for="purchase_uom" class="col-form-label text-gray-600">
+                                        Showing {{ pagination.from }} to
+                                        {{ pagination.to }} of
+                                        {{ pagination.total }} entries
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 d-flex justify-content-end">
+                                    <div class="dataTables_paginate paging_simple_numbers"
+                                        id="kt_ecommerce_sales_table_paginate">
+                                        <ul class="pagination">
+                                            <li class="paginate_button page-item previous"
+                                                :class="pagination.current_page == 1 ? 'disabled' : ''"
+                                                id="kt_ecommerce_sales_table_previous"><a href="javascript:void(0)"
+                                                    @click="setPage(pagination.current_page - 1)"
+                                                    aria-controls="kt_ecommerce_sales_table" data-dt-idx="0"
+                                                    tabindex="0" class="page-link"><i class="previous"></i></a></li>
+                                            <template v-for="(page, index) in pagination.last_page">
+                                                <template
+                                                    v-if="page == 1 || page == pagination.last_page || Math.abs(page - pagination.current_page) < 5">
+                                                    <li class="paginate_button page-item" :key="index"
+                                                        :class="pagination.current_page == page ? 'active' : ''"><a
+                                                            href="javascript:void(0)" @click="setPage(page)"
+                                                            aria-controls="kt_ecommerce_sales_table" data-dt-idx="1"
+                                                            tabindex="0" class="page-link">{{ page }}</a></li>
+                                                </template>
+                                            </template>
+                                            <li class="paginate_button page-item next"
+                                                :class="pagination.current_page == pagination.last_page ? 'disabled' : ''"
+                                                id="kt_ecommerce_sales_table_next"><a href="javascript:void(0)"
+                                                    @click="setPage(pagination.current_page + 1)"
+                                                    aria-controls="kt_ecommerce_sales_table" data-dt-idx="6"
+                                                    tabindex="0" class="page-link"><i class="next"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -184,6 +226,31 @@ const blogData = ref({});
 const blogCategories = ref([]);
 const errors = ref({});
 
+const page = ref(1);
+const perPage = ref(10);
+const pageCount = ref(25);
+const pagination = ref({});
+
+const setPage = async (new_page) => {
+    page.value = new_page;
+    const url = `http://127.0.0.1:8000/api/blog/all?page=${new_page}&per_page=${perPage.value}`;
+    await getBlogs(url);
+};
+
+const getBlogs = async (url = `http://127.0.0.1:8000/api/blog/all?page=1&per_page=${perPage.value}`) => {
+    try {
+        const response = await axios.get(url);
+        blogs.value = response.data.data; 
+        pagination.value = response.data.meta;
+    } catch (error) {
+        if (error.response && error.response.status === 422) {
+            errors.value = error.response.data.errors;
+        } else {
+            console.error(error);
+        }
+    }
+};
+
 const createBlog = async () => {
     try {
         if (blog.value.category?.id) {
@@ -228,20 +295,7 @@ const closeCreateModal = () => {
 
 const closeEditModal = () => {
     $('#editJob').modal('hide');
-}
-
-const getJobs = async () => {
-    try {
-        const response = await axios.get('http://127.0.0.1:8000/api/blog/all');
-        blogs.value = response.data;
-    } catch (error) {
-        if (error.response.status === 422) {
-            errors.value = error.response.data.errors
-        } else {
-            errorMessage(error);
-        }
-    }
-}
+} 
 
 const updateJob = async (id) => {
     try {
@@ -336,7 +390,7 @@ const visitTag = () => {
 }
 
 onMounted(() => {
-    getJobs();
+    getBlogs();
     getActivatedCategories();
 });
 </script>
