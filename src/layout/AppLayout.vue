@@ -1,13 +1,14 @@
 <script setup>
-// import { RouterLink, RouterView } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+
 import Navbar from '../components/main/Navbar.vue'
 import Sidebar from '../components/main/Sidebar.vue'
 import Footer from '../components/main/Footer.vue'
 
+const loading = ref(true);
+const route = useRoute();
 
-import { ref, onMounted } from 'vue'
-
-const loading = ref(true)
 import Preloader from '@/components/basic/preloader.vue';
 
 onMounted(() => {
@@ -26,13 +27,13 @@ onMounted(() => {
   <Preloader v-if="loading" />
 
   <div class="main-wrapper">
-    <Navbar />
+    <Navbar v-if="!route.meta.hideLayout"/>
 
-    <Sidebar />
-    <div class="page-wrapper">
+    <Sidebar v-if="!route.meta.hideLayout"/>
+     
       <RouterView />
-      <Footer /> 
-    </div>
+      <Footer v-if="!route.meta.hideLayout"/> 
+     
     
   </div>
 

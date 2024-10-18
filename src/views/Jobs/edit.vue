@@ -1,6 +1,6 @@
 <template>
     <!-- Main -->
-    <div class="p-2">
+    <div class="p-2 page-wrapper">
         <!-- Header -->
         <div class="d-flex justify-content-between">
             <div class="text-start">

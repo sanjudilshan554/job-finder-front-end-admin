@@ -11,6 +11,8 @@ import BlogCategories from '../views/Blogs/components/BlogCategory/index.vue'
 import EditBLog from '../views/Blogs/edit.vue'
 import BlogTag from '../views/Blogs/components/BlogTag/index.vue'
 import DeletedBlog from '../views/Blogs/components/DeletedList/index.vue'
+import Login from '../views/Login/index.vue'
+import Register from '../views/Register/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -74,6 +76,18 @@ const router = createRouter({
       path: '/blogs/deleted-list',
       name: 'deleted-blog',
       component: DeletedBlog
+    }, 
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+      meta: {hideLayout: true}
+    }, 
+    {
+      path: '/register',
+      name: 'register',
+      component: Register,
+      meta: {hideLayout: true}
     }, 
   ]
 })
