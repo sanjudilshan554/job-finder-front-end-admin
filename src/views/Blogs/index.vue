@@ -261,7 +261,7 @@ const createBlog = async () => {
         closeCreateModal();
         clearVariables();
         successMessage('Blog created successfully');
-        getJobs();
+        getBlogs();
         router.push({ name: 'edit-blog', params: { blog_id: response.data.id } });
     } catch (error) {
         if (error.response.status === 422) {

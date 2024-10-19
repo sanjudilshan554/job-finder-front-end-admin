@@ -102,15 +102,18 @@ const registerUser = async () => {
         clearValidationErrors();
         User.value.role = 'admin';
         const response = await axios.post('http://127.0.0.1:8000/api/user/register', User.value);
+        console.log('res',response );
         clearValidationErrors();
         clearVariables();
         successMessage('Registration Successfully');
+        
     } catch (error) {
-        if (error.response.status === 422) {
-            errors.value = error.response.data.errors
-        } else {
-            errorMessage(error);
-        }
+        // if (error.response.status === 422) {
+        //     errors.value = error.response.data.errors
+        // } else {
+        //     errorMessage(error);
+        // }
+        console.log('error',error);
     }
 }
 

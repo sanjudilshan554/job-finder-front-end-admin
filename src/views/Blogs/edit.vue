@@ -163,6 +163,7 @@ const updateBlog = async () => {
         blogData.value.category_id = blogData.value.category.id;
         blogData.value.category_name = blogData.value.category.name;
         const response = await axios.post(`http://127.0.0.1:8000/api/blog/update/${blog_id.value}`, blogData.value);
+        clearErrorMessage();
         successMessage('Blog updated successfully');
         getBlog();
         console.log('update', response);
@@ -244,6 +245,10 @@ const errorMessage = (title) => {
 
 const clearVariables = () => {
     blog.value = {};
+}
+
+const clearErrorMessage = () => {
+    errors.value = {};
 }
 
 const getActivatedCategories = async () => {

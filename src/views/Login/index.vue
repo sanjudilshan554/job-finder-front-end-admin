@@ -23,57 +23,24 @@
                         <h1>Login</h1>
                     </div>
                     <div class="card-body px-4 py-5 px-md-5">
-                        <form>
+                        <form @submit.prevent="loginUser">
                             <!-- Email input -->
                             <div data-mdb-input-init class="form-outline mb-4">
-                                <input type="email" id="form3Example3" class="form-control" />
+                                <input type="email" id="form3Example3" class="form-control" v-model="User.email"/>
                                 <label class="form-label" for="form3Example3">Email address</label>
                             </div>
 
                             <!-- Password input -->
                             <div data-mdb-input-init class="form-outline mb-4">
-                                <input type="password" id="form3Example4" class="form-control" />
+                                <input type="password" id="form3Example4" class="form-control" v-model="User.password"/>
                                 <label class="form-label" for="form3Example4">Password</label>
-                            </div>
-
-                            <!-- Checkbox -->
-                            <!-- <div class="form-check d-flex justify-content-center mb-4">
-                                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33"
-                                    checked />
-                                <label class="form-check-label" for="form2Example33">
-                                    Subscribe to our newsletter
-                                </label>
-                            </div> -->
+                            </div> 
 
                             <!-- Submit button -->
                             <button type="submit" data-mdb-button-init data-mdb-ripple-init
                                 class="btn btn-primary btn-block mb-4">
                                 Log in
-                            </button>
-
-                            <!-- Register buttons -->
-                            <!-- <div class="text-center">
-                                <p>or sign up with:</p>
-                                <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                    class="btn btn-link btn-floating mx-1">
-                                    <i class="fab fa-facebook-f"></i>
-                                </button>
-
-                                <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                    class="btn btn-link btn-floating mx-1">
-                                    <i class="fab fa-google"></i>
-                                </button>
-
-                                <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                    class="btn btn-link btn-floating mx-1">
-                                    <i class="fab fa-twitter"></i>
-                                </button>
-
-                                <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                    class="btn btn-link btn-floating mx-1">
-                                    <i class="fab fa-github"></i>
-                                </button>
-                            </div> -->
+                            </button> 
                         </form>
 
                         <div class="text-center">don't have an account <span class="text-primary cursor-pointer"
@@ -87,11 +54,35 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import axios from 'axios';
+
 const router = useRouter();
+
+const User = ref({});
 
 const visitRegister = () => {
     router.push({ name: 'register' });
 }
+
+const loginUser = async () => {
+    try {
+        const response = await axios.post('http://127.0.0.1:8000/api/login', User.value);
+        
+        // Store the token in localStorage
+        localStorage.setItem('access_token', response.data.token);
+
+        // Use the token in future requests
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
+        // Redirect to the dashboard or another page
+        // router.push({ name: 'dashboard' });
+    } catch (error) {
+        console.log('Login error:', error);
+    }
+};
+
+
 </script>
 
 <style>
