@@ -101,7 +101,7 @@ const registerUser = async () => {
     try {
         clearValidationErrors();
         User.value.role = 'admin';
-        const response = await axios.post('http://127.0.0.1:8000/api/user/register', User.value);
+        const response = await axios.post('http://127.0.0.1:8000/api/register', User.value);
         console.log('res',response );
         clearValidationErrors();
         clearVariables();
@@ -120,7 +120,6 @@ const registerUser = async () => {
 const clearVariables = () => {
     User.value = {};
 }
-
 
 const successMessage = (title) => {
     const Toast = Swal.mixin({

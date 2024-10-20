@@ -5,6 +5,7 @@
             <div class="row page-titles">
                 <div class="col-md-5 align-self-center">
                     <h3 class="text-themecolor">Dashboard</h3>
+                    <button @click="logout">Logout</button>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
                         <li class="breadcrumb-item active">Dashboard</li>
@@ -178,5 +179,17 @@
 <script setup>
 
 
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 
+// Router instance
+const router = useRouter();
+
+// Logout function
+const logout = async () => {
+  await axios.post('http://127.0.0.1:8000/api/logout');
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  router.push({ name: 'login' });
+};
 </script>
