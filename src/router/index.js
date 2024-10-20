@@ -13,6 +13,7 @@ import BlogTag from '../views/Blogs/components/BlogTag/index.vue'
 import DeletedBlog from '../views/Blogs/components/DeletedList/index.vue'
 import Login from '../views/Login/index.vue'
 import Register from '../views/Register/index.vue'
+import User from '../views/User/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,6 +89,11 @@ const router = createRouter({
       name: 'register',
       component: Register,
       meta: {hideLayout: true}
+    }, 
+    {
+      path: '/user',
+      name: 'user',
+      component: User, 
     }, 
   ]
 })

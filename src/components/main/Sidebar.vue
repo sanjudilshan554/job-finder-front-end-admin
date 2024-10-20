@@ -18,6 +18,10 @@
                             href="/blogs" aria-expanded="false"><i class="bi bi-images"></i><span
                                 class="hide-menu">Blogs</span></a>
                     </li>
+                    <li :class="{ active: $route.path.startsWith('/user') }"> <a class="waves-effect waves-dark"
+                            href="/user" aria-expanded="false"><i class="bi bi-person"></i><span
+                                class="hide-menu">User</span></a>
+                    </li>
                 </ul>
             </nav>
         </div>
