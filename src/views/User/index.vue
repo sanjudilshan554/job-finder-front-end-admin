@@ -34,7 +34,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="user in users" class="cursor-pointer"> 
+                                    <tr v-for="user in users" class="cursor-pointer" @click.prevent="visitUserPermission(user.id)"> 
                                         <td>{{ user.name }}</td>
                                         <td>{{ user.email }}</td> 
                                         <td class="d-flex">
@@ -387,9 +387,11 @@ const clearValidationErrors = () => {
     errors.value = {};
 }
 
-const visitJobs = () => {
-    router.push({ name: 'jobs' });
-}
+const visitUserPermission = (userId) => {
+    router.push({ name: 'user-permission', params: { user_id: userId } });
+    console.log('user', userId);
+} 
+
 
 onMounted(() => {
     getUsers();

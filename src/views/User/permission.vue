@@ -1,5 +1,5 @@
 <template>
-    <div class="shadow card">
+    <div class="shadow card page-wrapper">
         <div class="card-body">
             <div id="basic-info">
                 <div class="ps-0 card-header">
@@ -67,15 +67,15 @@
     </div>
 </template>
 
-<script setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link, router, usePage } from "@inertiajs/vue3";
+<script setup> 
+import axios from "axios";
 import Multiselect from "vue-multiselect";
 import Swal from "sweetalert2";
 import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from 'vue-router';
 
-const { props } = usePage();
-const userId = props.user.id;
+const route = useRoute(); 
+const user_id = ref(route.params.user_id);
 
 const validationErrors = ref({});
 const validationMessage = ref(null);
@@ -89,6 +89,7 @@ const selectAll = ref(false);
 
 onMounted(() => {
     initData();
+    console.log('props',user_id.value );
 })
 
 
@@ -155,10 +156,12 @@ async function initData() {
 
 async function getUser() {
     const response = (
-        await axios.get(route("user.get", userId))
+        await axios.get(`http://127.0.0.1:8000/api/user/get/${user_id.value}`)
     ).data;
     user.value = response.data;
+    console.log('test', user.value );
 }
+
 async function updateUserPermission() {
 
     resetValidationErrors();
@@ -177,30 +180,28 @@ async function updateUserPermission() {
     }
 
 }
-async function getPermissionGroup() {
+async function getPermissionGroup() { 
+
     const response = (
-        await axios.get(
-            route("permission.group.all")
-        )
+        await axios.get(`http://127.0.0.1:8000/api/user/permission/all/${user_id.value}`)
     ).data;
+
     groups.value = response;
     checkSelectAll();
 }
-async function getPermissions() {
+async function getPermissions() { 
     const response = (
-        await axios.get(
-            route("permission.list.all")
-        )
+        await axios.get(`http://127.0.0.1:8000/api/user/permission/list/all/`)
     ).data;
+
     permissions.value = response;
 }
-async function userPermissions() {
+async function userPermissions() { 
     const response = (
-        await axios.get(
-            route("permission.user.all", userId)
-        )
+        await axios.get(`http://127.0.0.1:8000/api/user/permission/all/${user_id.value}`)
     ).data;
     user_permissions.value = response;
+    console.log('user permission: ', user_permissions.value);
 }
 
 function checkSelectAll() {

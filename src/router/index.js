@@ -14,6 +14,7 @@ import DeletedBlog from '../views/Blogs/components/DeletedList/index.vue'
 import Login from '../views/Login/index.vue'
 import Register from '../views/Register/index.vue'
 import User from '../views/User/index.vue'
+import UserPermission from '../views/User/permission.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -94,6 +95,11 @@ const router = createRouter({
       path: '/user',
       name: 'user',
       component: User, 
+    }, 
+    {
+      path: '/user/permission/:user_id',
+      name: 'user-permission',
+      component: UserPermission, 
     }, 
   ]
 })

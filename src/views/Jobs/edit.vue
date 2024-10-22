@@ -324,6 +324,7 @@ const clearValidationErrors = () => {
 }
 
 onMounted(() => {
+    console.log('on mounted', job_id.value);
     getJob();
     getActivatedCategories();
 });
